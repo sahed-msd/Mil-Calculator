@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mil Calculator</title>
+    <style>
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Main container */
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #4a90e2;
+            margin-bottom: 20px;
+        }
+
+        /* Styling input groups */
+        .input-group {
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #4a90e2;
+            outline: none;
+        }
+
+        /* Styling the button */
+        button {
+            background-color: #4a90e2;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #357abd;
+        }
+
+        /* Result area */
+        #result {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        #result p {
+            padding: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mil Calculator</h1>
+
+        <!-- Input fields for all values -->
+        <div class="input-group">
+            <label>মোট টাকা  :</label>
+            <input type="number" id="mottaka" placeholder="Enter total amount">
+        </div>
+        <div class="input-group">
+            <label>মোট খরচ  :</label>
+            <input type="number" id="motkhoroch" placeholder="Enter total expense">
+        </div>
+        <div class="input-group">
+            <label>মোট মিল  :</label>
+            <input type="number" id="motmil" placeholder="Enter total received">
+        </div>
+        <div class="input-group">
+            <label>হিসাব ধারির নাম :</label>
+            <input type="text" id="nameInput" placeholder="হিসাব ধারির নাম ">
+        </div>
+        <div class="input-group">
+            <label>হিসাব ধারির  মোট মিল :</label>
+            <input type="number" id="totalmilInput" placeholder="Enter mil amount">
+        </div>
+        <div class="input-group">
+            <label>অতিরিক্ত খরচ  </label>
+            <input type="number" id="extraKhorochInput" placeholder="Enter extra expense">
+        </div>
+        <div class="input-group">
+            <label>মোট জমা টাকা  </label>
+            <input type="number" id="jomaInput" placeholder="Enter collected amount">
+        </div>
+
+        <!-- Calculate button -->
+        <button onclick="calculateAll()">Calculate</button>
+
+        <!-- Display result -->
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateAll() {
+            // Collect values from input fields
+            const mottaka = parseFloat(document.getElementById("mottaka").value);
+            const motkhoroch = parseFloat(document.getElementById("motkhoroch").value);
+            const motmil = parseFloat(document.getElementById("motmil").value);
+            const name = document.getElementById("nameInput").value;
+            const totalmil = parseFloat(document.getElementById("totalmilInput").value);
+            const extraKhoroch = parseFloat(document.getElementById("extraKhorochInput").value);
+            const joma = parseFloat(document.getElementById("jomaInput").value);
+
+            // Validate inputs
+            if (isNaN(mottaka) || isNaN(motkhoroch) || isNaN(motmil) || isNaN(totalmil) || isNaN(extraKhoroch) || isNaN(joma) || motmil === 0) {
+                document.getElementById("result").innerText = "Please enter valid numbers. 'মোট মিল  ' should not be zero.";
+                return;
+            }
+
+            // Initial calculations
+            const oboshisto = mottaka - motkhoroch;
+            const milret = motkhoroch / motmil;
+
+            // Mil calculation for entered name
+            const khoroch = milret * totalmil;
+            const exk = extraKhoroch + khoroch;
+            const pabe = joma - exk;
+
+            
+            // Determine message based on comparison of khoroch and exk
+            let message;
+            if (joma > exk) {
+                message = "মিল ধরি টাকা পাবে  : " + pabe.toFixed(2);
+            } else if (joma < exk) {
+                message = "মেনেজার টাকা পাবে  : " + pabe.toFixed(2);
+            } else {
+                message = "No additional amount owed.";
+            }
+
+            // Display the results
+            document.getElementById("result").innerHTML = `
+                <p>অবশিষ্ট টাকা  : ${oboshisto.toFixed(2)}</p>
+                <p>মিল রেট  : ${milret.toFixed(2)}</p>
+                <p>মিল খরচ   ${name}: ${khoroch.toFixed(2)}</p>
+                <p>মিল খরচ ও অতিরিক্ত খরচ  : ${exk.toFixed(2)}</p>
+                <p>${message}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
