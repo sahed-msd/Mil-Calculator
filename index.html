@@ -102,23 +102,23 @@
 
         <!-- Input fields for all values -->
         <div class="input-group">
-            <label>মোট টাকা  :</label>
+            <label>মোট টাকা  </label>
             <input type="number" id="mottaka" placeholder="Enter total amount">
         </div>
         <div class="input-group">
-            <label>মোট খরচ  :</label>
+            <label>মোট খরচ  </label>
             <input type="number" id="motkhoroch" placeholder="Enter total expense">
         </div>
         <div class="input-group">
-            <label>মোট মিল  :</label>
+            <label>মোট মিল  </label>
             <input type="number" id="motmil" placeholder="Enter total received">
         </div>
         <div class="input-group">
-            <label>হিসাব ধারির নাম :</label>
+            <label>হিসাব ধারির নাম </label>
             <input type="text" id="nameInput" placeholder="হিসাব ধারির নাম ">
         </div>
         <div class="input-group">
-            <label>হিসাব ধারির  মোট মিল :</label>
+            <label>হিসাব ধারির  মোট মিল </label>
             <input type="number" id="totalmilInput" placeholder="Enter mil amount">
         </div>
         <div class="input-group">
@@ -167,11 +167,11 @@
             // Determine message based on comparison of khoroch and exk
             let message;
             if (joma > exk) {
-                message = "মিল ধরি টাকা পাবে  : " + pabe.toFixed(2);
+                message =name + " টাকা পাবে  : " + pabe.toFixed(2);
             } else if (joma < exk) {
-                message = "মেনেজার টাকা পাবে  : " + pabe.toFixed(2);
+                message = "ম্যানেজার টাকা পাবে  : " + pabe.toFixed(2);
             } else {
-                message = "No additional amount owed.";
+                message = "কেউ কোনো টাকা পাবে না ";
             }
 
             // Display the results
