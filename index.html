@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mil Calculator</title>
     <style>
-        /* Reset some default styles */
+ 
         * {
             box-sizing: border-box;
             margin: 0;
@@ -20,9 +20,10 @@
             align-items: center;
             min-height: 100vh;
             color: #333;
+            position: relative;
         }
 
-        /* Main container */
+
         .container {
             background-color: #fff;
             border-radius: 8px;
@@ -38,7 +39,7 @@
             margin-bottom: 20px;
         }
 
-        /* Styling input groups */
+
         .input-group {
             margin-top: 15px;
             text-align: left;
@@ -64,7 +65,7 @@
             outline: none;
         }
 
-        /* Styling the button */
+
         button {
             background-color: #4a90e2;
             color: #fff;
@@ -83,7 +84,27 @@
             background-color: #357abd;
         }
 
-        /* Result area */
+
+        .about-me-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #4a90e2;
+            color: #fff;
+            padding: 10px 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .about-me-button:hover {
+            background-color: #357abd;
+        }
+
+
         #result {
             margin-top: 20px;
             text-align: left;
@@ -97,10 +118,12 @@
     </style>
 </head>
 <body>
+
+    <a href="https://shahed-five.vercel.app/" class="about-me-button">About Me</a>
+
     <div class="container">
         <h1>Mil Calculator</h1>
 
-        <!-- Input fields for all values -->
         <div class="input-group">
             <label>মোট টাকা  </label>
             <input type="number" id="mottaka" placeholder="Enter total amount">
@@ -130,16 +153,15 @@
             <input type="number" id="jomaInput" placeholder="Enter collected amount">
         </div>
 
-        <!-- Calculate button -->
+
         <button onclick="calculateAll()">Calculate</button>
 
-        <!-- Display result -->
         <div id="result"></div>
     </div>
 
     <script>
         function calculateAll() {
-            // Collect values from input fields
+
             const mottaka = parseFloat(document.getElementById("mottaka").value);
             const motkhoroch = parseFloat(document.getElementById("motkhoroch").value);
             const motmil = parseFloat(document.getElementById("motmil").value);
@@ -148,23 +170,20 @@
             const extraKhoroch = parseFloat(document.getElementById("extraKhorochInput").value);
             const joma = parseFloat(document.getElementById("jomaInput").value);
 
-            // Validate inputs
             if (isNaN(mottaka) || isNaN(motkhoroch) || isNaN(motmil) || isNaN(totalmil) || isNaN(extraKhoroch) || isNaN(joma) || motmil === 0) {
                 document.getElementById("result").innerText = "Please enter valid numbers. 'মোট মিল  ' should not be zero.";
                 return;
             }
 
-            // Initial calculations
+
             const oboshisto = mottaka - motkhoroch;
             const milret = motkhoroch / motmil;
 
-            // Mil calculation for entered name
             const khoroch = milret * totalmil;
             const exk = extraKhoroch + khoroch;
             const pabe = joma - exk;
 
-            
-            // Determine message based on comparison of khoroch and exk
+
             let message;
             if (joma > exk) {
                 message =name + " টাকা পাবে  : " + pabe.toFixed(2);
@@ -174,7 +193,6 @@
                 message = "কেউ কোনো টাকা পাবে না ";
             }
 
-            // Display the results
             document.getElementById("result").innerHTML = `
                 <p>অবশিষ্ট টাকা  : ${oboshisto.toFixed(2)}</p>
                 <p>মিল রেট  : ${milret.toFixed(2)}</p>
