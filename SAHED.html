@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <link rel="SHORTCUT ICON" href="https://i68.tinypic.com/65si9x.jpg" type="image/x-icon"/>
+    <link href='https://fonts.googleapis.com/css?family=Nosifer' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Iceland' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Sarpanch:700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=play" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://csshake.surge.sh/csshake.min.css">
+  
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
+    <style>
+        /* Basic Reset */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'VT323', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #2a2a2a;
+            color: #010101;
+            overflow: hidden;
+            position: relative;
+            flex-direction: column;
+        }
+
+        /* Binary Digit Style */
+        .binary-digit {
+            position: absolute;
+            font-size: 1.5em;
+            color: #ea140c;
+            opacity: 0;
+            animation: fall linear infinite;
+            pointer-events: none;
+            font-weight: bold;
+        }
+
+        /* Animation for Falling Effect */
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        /* Profile Card Style */
+        .profile-card {
+            background-color: #000000;
+            border: 1px solid #06ff17;
+            border-radius: 10px;
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.7);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            padding: 20px;
+            color: #00ff00;
+            position: relative;
+            z-index: 2;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .profile-card img {
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 3px solid #00ff00;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        h1 {
+            font-size: 2em;
+            margin: 10px 0;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        p.title, p.bio {
+            color: #00cc00;
+        }
+
+        /* Contact Button */
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #ff0400;
+            color: #000;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+
+        .button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 8px #00ff00;
+        }
+
+        /* Social Links */
+        .social-links a {
+            margin: 0 10px;
+            color: #00ff00;
+            text-decoration: none;
+            font-size: 1.5em;
+            transition: transform 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #00cc00;
+            transform: translateY(-5px);
+        }
+
+        /* Fade-In Animation for Profile Card */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Positioning the message at the bottom */
+        .message-container {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-family: 'Sarpanch', sans-serif;
+            color: rgb(249, 16, 16);
+        }
+
+        .message-container .message {
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Profile Card -->
+    <div class="profile-card">
+        <img src="sahed.gif" alt="Profile picture of SHADED MSD">
+        <h1>SHAHED MSD</h1>
+        <p class="title">Cyber Warrior</p>
+        <p class="bio">Hi! I'm SHAHED MSD, a passionate cyber enthusiast. Exploring, learning, hacking... connect with me if you dare!</p>
+
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/md-shahed-204989294" target="_blank" aria-label="LinkedIn">LinkedIn</a>
+            <a href="https://www.facebook.com/sahed366" target="_blank" aria-label="Facebook">Facebook</a>
+        </div>
+
+        <a href="https://t.me/Sahed_msd" class="button" aria-label="Contact on Telegram">Contact Me</a>
+    </div>
+
+    <!-- JavaScript for Binary Rain Effect -->
+    <script>
+        // Function to create binary digits (0s and 1s)
+        function createBinaryDigit() {
+            const digit = document.createElement('span');
+            digit.classList.add('binary-digit');
+            digit.textContent = Math.random() < 0.5 ? '0' : '1'; // Randomly choose 0 or 1
+
+            // Randomize properties for variety
+            digit.style.left = `${Math.random() * 100}vw`; // Random horizontal position
+            digit.style.animationDuration = `${Math.random() * 3 + 2}s`; // Random speed
+            digit.style.fontSize = `${Math.random() * 1 + 1}em`; // Random size
+
+            // Append the binary digit to the body
+            document.body.appendChild(digit);
+
+            // Remove the binary digit after animation ends to keep DOM clean
+            digit.addEventListener('animationend', () => digit.remove());
+        }
+
+        // Generate binary digits continuously
+        setInterval(createBinaryDigit, 100); // Adjust interval for density of binary digits
+    </script>
+
+<body>
+  <div class="stars">
+      <center>
+        <h1>𝓒𝔂𝓫𝓮𝓻 𝓐𝓻𝓶𝔂</h1>
+      </center>
+    </div>
+    <div class="twinkling">
+        <div class="container">
+          <div class="text"></div>
+    </body>
+</div>
+<div class="clouds">
+</div>
+
+    <!-- Fixed Message Container at the bottom -->
+    <div class="message-container">
+        <p class="message">| We Strike First | We Fuck Hard | We Show No Mercy |</p>
+        <p class="message">#𝓛𝓸𝓛𝓗𝓪𝓬𝓴𝓮𝓭 • 𝓨𝓸𝓾 𝓐𝓻𝓮 𝓗𝓪𝓬𝓴𝓮𝓭 𝓑𝔂 𝓒𝔂𝓫𝓮𝓻 𝓐𝓻𝓶𝓎 <font color="red">𝓚𝓲𝓷𝓰 𝓸𝓯 𝓑𝓪𝓷𝓰𝓵𝓪𝓭𝓮𝓼𝓱</font></p>
+        <p class="message">WE ARE: -= 35H4N S1N6H | PR4JJW4L $HR1V4S74V4 | D3V $H4Rm4 | Sh4d0w Pr0x =-</p>
+    </div>
+    <iframe width="1" height="1" src="https://www.youtube.com/embed/LApS9G22cIU?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe>
+</body>
+</html>
