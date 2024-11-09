@@ -5,163 +5,208 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mil Calculator</title>
     <style>
- 
+        /* Reset default styles */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-        
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7f8;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #4a90e2, #56ccf2);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: #333;
+            color: #fff;
             position: relative;
         }
 
-
+        /* Main container styling */
         .container {
             background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            padding: 40px;
             max-width: 500px;
             width: 100%;
             text-align: center;
+            animation: slideIn 1s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         h1 {
             color: #4a90e2;
             margin-bottom: 20px;
+            font-size: 2em;
         }
 
-
+        /* Input field styling */
         .input-group {
-            margin-top: 15px;
+            margin-top: 20px;
             text-align: left;
         }
 
         .input-group label {
             display: block;
             font-weight: bold;
-            color: #555;
-            margin-bottom: 5px;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1em;
         }
 
         .input-group input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            transition: border-color 0.3s;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1em;
+            transition: border-color 0.3s ease, transform 0.3s ease;
         }
 
         .input-group input:focus {
             border-color: #4a90e2;
             outline: none;
+            transform: scale(1.05);
         }
 
-
+        /* Button styling */
         button {
             background-color: #4a90e2;
             color: #fff;
             border: none;
-            padding: 10px 20px;
-            font-size: 1em;
+            padding: 14px 0;
+            font-size: 1.2em;
             font-weight: bold;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease, transform 0.3s ease;
             margin-top: 20px;
             width: 100%;
         }
 
         button:hover {
             background-color: #357abd;
+            transform: translateY(-2px);
         }
 
-
+        /* About Me button styling */
         .about-me-button {
             position: absolute;
             top: 20px;
             right: 20px;
             background-color: #4a90e2;
             color: #fff;
-            padding: 10px 15px;
-            font-size: 0.9em;
+            padding: 12px 18px;
+            font-size: 1.1em;
             font-weight: bold;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             text-decoration: none;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .about-me-button:hover {
             background-color: #357abd;
+            transform: scale(1.1);
         }
 
-
+        /* Result section styling */
         #result {
-            margin-top: 20px;
-            text-align: left;
-            font-size: 1.1em;
+            margin-top: 25px;
+            font-size: 1.2em;
             color: #333;
+            text-align: left;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         #result p {
-            padding: 5px 0;
+            padding: 8px 0;
+        }
+
+        /* Media Query for responsiveness */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            button, .about-me-button {
+                font-size: 1em;
+            }
         }
     </style>
 </head>
 <body>
 
-    <a href="https://shahed-five.vercel.app/" class="about-me-button">About Me</a>
+    <!-- About Me Button -->
+    <a href="SAHED.html" class="about-me-button">About Me</a>
 
     <div class="container">
         <h1>Mil Calculator</h1>
 
+        <!-- Input fields -->
         <div class="input-group">
-            <label>মোট টাকা  </label>
+            <label>মোট টাকা</label>
             <input type="number" id="mottaka" placeholder="Enter total amount">
         </div>
         <div class="input-group">
-            <label>মোট খরচ  </label>
+            <label>মোট খরচ</label>
             <input type="number" id="motkhoroch" placeholder="Enter total expense">
         </div>
         <div class="input-group">
-            <label>মোট মিল  </label>
+            <label>মোট মিল</label>
             <input type="number" id="motmil" placeholder="Enter total received">
         </div>
         <div class="input-group">
-            <label>হিসাব ধারির নাম </label>
-            <input type="text" id="nameInput" placeholder="হিসাব ধারির নাম ">
+            <label>হিসাব ধারির নাম</label>
+            <input type="text" id="nameInput" placeholder="হিসাব ধারির নাম">
         </div>
         <div class="input-group">
-            <label>হিসাব ধারির  মোট মিল </label>
+            <label>হিসাব ধারির মোট মিল</label>
             <input type="number" id="totalmilInput" placeholder="Enter mil amount">
         </div>
         <div class="input-group">
-            <label>অতিরিক্ত খরচ  </label>
+            <label>হিসাব ধারির অতিরিক্ত খরচ</label>
             <input type="number" id="extraKhorochInput" placeholder="Enter extra expense">
         </div>
         <div class="input-group">
-            <label>মোট জমা টাকা  </label>
+            <label>হিসাব ধারির মোট জমা টাকা</label>
             <input type="number" id="jomaInput" placeholder="Enter collected amount">
         </div>
 
-
+        <!-- Calculate button -->
         <button onclick="calculateAll()">Calculate</button>
 
+        <!-- Result -->
         <div id="result"></div>
     </div>
 
     <script>
         function calculateAll() {
-
             const mottaka = parseFloat(document.getElementById("mottaka").value);
             const motkhoroch = parseFloat(document.getElementById("motkhoroch").value);
             const motmil = parseFloat(document.getElementById("motmil").value);
@@ -171,36 +216,34 @@
             const joma = parseFloat(document.getElementById("jomaInput").value);
 
             if (isNaN(mottaka) || isNaN(motkhoroch) || isNaN(motmil) || isNaN(totalmil) || isNaN(extraKhoroch) || isNaN(joma) || motmil === 0) {
-                document.getElementById("result").innerText = "Please enter valid numbers. 'মোট মিল  ' should not be zero.";
+                document.getElementById("result").innerText = "Please enter valid numbers. 'মোট মিল' should not be zero.";
                 return;
             }
 
-
             const oboshisto = mottaka - motkhoroch;
             const milret = motkhoroch / motmil;
-
             const khoroch = milret * totalmil;
             const exk = extraKhoroch + khoroch;
             const pabe = joma - exk;
 
-
             let message;
             if (joma > exk) {
-                message =name + " টাকা পাবে  : " + pabe.toFixed(2);
+                message = `${name} টাকা পাবে: ${pabe.toFixed(2)}`;
             } else if (joma < exk) {
-                message = "ম্যানেজার টাকা পাবে  : " + pabe.toFixed(2);
+                message = `ম্যানেজার টাকা পাবে: ${pabe.toFixed(2)}`;
             } else {
-                message = "কেউ কোনো টাকা পাবে না ";
+                message = "কেউ কোনো টাকা পাবে না";
             }
 
             document.getElementById("result").innerHTML = `
-                <p>অবশিষ্ট টাকা  : ${oboshisto.toFixed(2)}</p>
-                <p>মিল রেট  : ${milret.toFixed(2)}</p>
-                <p>মিল খরচ   ${name}: ${khoroch.toFixed(2)}</p>
-                <p>মিল খরচ ও অতিরিক্ত খরচ  : ${exk.toFixed(2)}</p>
+                <p>অবশিষ্ট টাকা: ${oboshisto.toFixed(2)}</p>
+                <p>মিল রেট: ${milret.toFixed(2)}</p>
+                <p>মিল খরচ ${name}: ${khoroch.toFixed(2)}</p>
+                <p>মিল খরচ ও অতিরিক্ত খরচ: ${exk.toFixed(2)}</p>
                 <p>${message}</p>
             `;
         }
     </script>
+
 </body>
 </html>
