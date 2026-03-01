@@ -2,280 +2,270 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>মিল ক্যালকুলেটর 📱💻 ডেস্কটপ মোড ফিক্স</title>
-    <!-- html2canvas (stable) - ফুল টেবিল ক্যাপচার নিশ্চিত করতে -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
+    <title>মিল ক্যালকুলেটর 💠 ডেস্কটপ মোড (সব ডিভাইস)</title>
+    <!-- html2canvas (stable) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background: linear-gradient(145deg, #0c2c46 0%, #1b4f72 100%);
+            background: linear-gradient(145deg, #0b2c48 0%, #1c4e78 100%);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 15px 12px 30px 12px;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px 16px;
         }
 
-        /* মূল কন্টেইনার - ফুল ডেস্কটপ স্টাইল, মোবাইলেও একই */
-        .main-card {
+        /* মূল কন্টেইনার - সম্পূর্ণ ডেস্কটপ অনুপাতে, কিন্তু fluid */
+        .calculator {
             max-width: 1400px;
             width: 100%;
             background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            border-radius: 36px;
-            box-shadow: 0 30px 55px rgba(0, 0, 0, 0.4);
-            padding: 35px 30px;
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(8px);
+            border-radius: 40px;
+            box-shadow: 0 35px 65px rgba(0, 0, 0, 0.4);
+            padding: clamp(20px, 4vw, 40px);
+            border: 2px solid rgba(255,255,240,0.5);
         }
 
-        /* হেডার ও টাইটেল - ডেস্কটপ সাইজে স্থির */
+        /* হেডার - ডেস্কটপ স্টাইল, কিন্তু responsive */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 3px dashed #31699e;
+            padding-bottom: 20px;
+        }
         h1 {
-            color: #0d3152;
-            font-size: 2.6rem;
-            text-align: center;
-            margin-bottom: 18px;
+            color: #0c3253;
+            font-size: clamp(2rem, 5vw, 2.8rem);
             font-weight: 800;
             letter-spacing: -0.5px;
-            border-bottom: 4px dashed #2f6e9c;
-            padding-bottom: 18px;
         }
-
-        /* about বাটন */
         .about-link {
-            display: inline-block;
-            background: #ffb84d;
-            color: #0b263b;
-            font-weight: bold;
-            padding: 14px 28px;
-            border-radius: 60px;
+            background: #ffb347;
+            color: #0e263b;
+            padding: 12px 28px;
+            border-radius: 50px;
             text-decoration: none;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            border: 3px solid #ffe6b0;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+            font-weight: 700;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            border: 2px solid #ffe29c;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
             transition: 0.2s;
         }
         .about-link:hover {
-            background: #ffa621;
-            transform: translateY(-3px);
+            background: #ffa01e;
+            transform: translateY(-2px);
         }
 
-        /* মাস্টার গ্রিড - ডেস্কটপ স্টাইল */
-        .master-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            background: #e2efff;
-            padding: 28px 25px;
+        /* ইনপুট গ্রিড - ডেস্কটপ স্টাইলিং */
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            background: #e4f0ff;
             border-radius: 32px;
-            margin: 25px 0 25px 0;
-            border: 2px solid #b6d0f0;
+            padding: 28px 24px;
+            margin: 25px 0;
+            border: 2px solid #b3cefd;
         }
-        .master-item {
-            flex: 1 1 180px;
-            min-width: 180px;
-        }
-        .master-item label {
+        .input-field label {
             display: block;
             font-weight: 700;
-            color: #10316b;
+            color: #103f6b;
             margin-bottom: 8px;
             font-size: 1.1rem;
         }
-        .master-item input {
+        .input-field input {
             width: 100%;
             padding: 16px 18px;
-            border: 2px solid #c8d9fc;
+            border: 2px solid #b0caf5;
             border-radius: 40px;
             font-size: 1.1rem;
             background: white;
-            border: 2px solid #90b4f0;
+            transition: 0.2s;
         }
-        .master-item input:focus {
-            border-color: #1f5cb0;
+        .input-field input:focus {
+            border-color: #1a5cb0;
             outline: none;
-            box-shadow: 0 0 0 4px rgba(31,92,176,0.2);
+            box-shadow: 0 0 0 3px rgba(26,92,176,0.2);
         }
 
-        /* অ্যাড মেম্বার প্যানেল */
-        .add-panel {
-            background: #d7e8ff;
+        /* অ্যাড সেকশন */
+        .add-section {
+            background: #d3e7ff;
             border-radius: 36px;
-            padding: 28px 25px;
+            padding: 28px 24px;
             margin: 25px 0;
             border: 3px solid white;
         }
-        .panel-title {
-            font-size: 2rem;
-            color: #0f2d4e;
+        .add-title {
+            font-size: clamp(1.5rem, 4vw, 2rem);
             font-weight: 700;
-            margin-bottom: 20px;
+            color: #0f3557;
+            margin-bottom: 22px;
             display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .member-inputs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 18px;
-            align-items: flex-end;
-        }
-        .member-field {
-            flex: 1 1 170px;
-            min-width: 170px;
-        }
-        .member-field label {
-            font-weight: 600;
-            color: #0a2a4a;
-            font-size: 1rem;
-            margin-bottom: 6px;
-            display: block;
-        }
-        .member-field input {
-            width: 100%;
-            padding: 15px 18px;
-            border-radius: 40px;
-            border: 2px solid #adc6f0;
-            background: white;
-            font-size: 1.1rem;
-        }
-        .add-btn {
-            background: #113e6b;
-            color: white;
-            border: none;
-            padding: 16px 36px;
-            border-radius: 60px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            display: inline-flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 10px 20px rgba(0,40,80,0.4);
-            cursor: pointer;
-            border: 3px solid #8fb4ff;
-            transition: 0.2s;
-            margin-top: 10px;
         }
-        .add-btn:hover {
-            background: #175697;
-            transform: translateY(-3px);
+        .add-title span {
+            background: #133e6b;
+            color: white;
+            padding: 6px 24px;
+            border-radius: 50px;
+        }
+        .member-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 18px;
+            align-items: end;
+        }
+        .form-field label {
+            font-weight: 600;
+            color: #0a2e51;
+            margin-bottom: 6px;
+            display: block;
+            font-size: 1rem;
+        }
+        .form-field input {
+            width: 100%;
+            padding: 16px 16px;
+            border-radius: 40px;
+            border: 2px solid #aec6f0;
+            background: white;
+            font-size: 1rem;
+        }
+        .add-btn {
+            background: #133e6b;
+            color: white;
+            border: none;
+            padding: 16px 28px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            border: 2px solid #9cb9ff;
+            box-shadow: 0 10px 18px #0a2a4a60;
+            transition: 0.2s;
+            height: fit-content;
+            white-space: nowrap;
         }
 
-        /* অ্যাকশন হেডার (ডেস্কটপ সাইজ) */
-        .action-header {
+        /* কন্ট্রোল প্যানেল (ডেস্কটপ লেআউট) */
+        .control-bar {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
             gap: 20px;
-            margin: 30px 0 25px 0;
+            margin: 30px 0 25px;
         }
-        .title-with-clear {
+        .title-group {
             display: flex;
             align-items: center;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 18px;
         }
-        .title-with-clear h2 {
-            font-size: 2.2rem;
-            color: #102b47;
+        .title-group h2 {
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            color: #102f50;
         }
         .clear-btn {
-            background: #dc3545;
+            background: #c93e4e;
             color: white;
             border: none;
             border-radius: 50px;
-            padding: 12px 28px;
+            padding: 10px 24px;
+            font-size: 1.1rem;
             font-weight: bold;
-            font-size: 1.2rem;
             cursor: pointer;
-            border: 2px solid #ffb0b0;
+            border: 2px solid #ffb3b3;
         }
-        .download-png-btn {
-            background: #1f6e43;
+        .download-btn {
+            background: #1d6e41;
             color: white;
             border: none;
-            border-radius: 60px;
-            padding: 16px 36px;
-            font-size: 1.4rem;
+            border-radius: 50px;
+            padding: 14px 32px;
+            font-size: 1.3rem;
             font-weight: bold;
             display: flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 10px 20px #0b3b1e70;
             cursor: pointer;
-            border: 3px solid #b0e0b0;
+            border: 3px solid #b0e6b0;
+            box-shadow: 0 8px 18px #0b4623;
         }
 
-        /* ===== PNG আউটপুট এরিয়া (ফুল ডেস্কটপ স্টাইল) ===== */
-        #pngOutputArea {
+        /* ===== PNG আউটপুট এরিয়া (শুধু আউটপুট) ===== */
+        #outputArea {
             background: white;
-            border-radius: 40px;
-            padding: 30px 25px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-            margin: 20px 0 30px 0;
-            border: 3px solid #c0d4ff;
-            width: 100%;
-            /* ডেস্কটপ ভিউ ফোর্স করা - overflow ভিজিবল */
-            overflow: visible;
+            border-radius: 36px;
+            padding: 28px 24px;
+            border: 3px solid #bdd6ff;
+            margin: 25px 0 20px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.1);
         }
 
-        /* টেবিল কন্টেইনার - কোন স্ক্রল নয়, সম্পূর্ণ দৃশ্যমান */
-        .table-fixed {
+        /* টেবিল ধারক - পূর্ণপ্রস্থ, কোনো ওভারফ্লো ছাড়া */
+        .table-container {
             width: 100%;
-            overflow: visible;
-            margin-bottom: 30px;
             border-radius: 28px;
-            background: #eaf1fd;
+            background: #e9f2ff;
             padding: 8px;
+            margin-bottom: 30px;
         }
-        /* টেবিল fixed width - ডেস্কটপের মতো স্থির */
         table {
             width: 100%;
             border-collapse: collapse;
             background: white;
-            border-radius: 28px;
+            border-radius: 24px;
             overflow: hidden;
-            font-size: 1.1rem;
-            table-layout: fixed; /* সমান কলাম width */
-        }
-        th, td {
-            padding: 18px 12px;
-            border-bottom: 2px solid #cddfff;
-            color: #11212e;
-            font-weight: 500;
-            text-align: center;
-            word-wrap: break-word;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            table-layout: fixed;
         }
         th {
-            background: #0d3870;
+            background: #0e3b70;
             color: white;
-            font-weight: 700;
-            font-size: 1.2rem;
+            padding: 18px 8px;
+            font-weight: 600;
+        }
+        td {
+            padding: 16px 8px;
+            border-bottom: 2px solid #dae6ff;
+            color: #11212e;
+            text-align: center;
+            word-break: break-word;
         }
 
-        /* সমষ্টি বক্স - ডেস্কটপ */
-        .summary-box {
-            background: linear-gradient(115deg, #082338, #1b4870);
-            border-radius: 36px;
-            padding: 28px 25px;
+        /* সমষ্টি বক্স - ডেস্কটপ স্টাইল */
+        .summary-block {
+            background: linear-gradient(115deg, #082b4a, #1b4e7a);
+            border-radius: 32px;
+            padding: 26px 22px;
             color: white;
-            margin-top: 20px;
+            margin-top: 15px;
         }
-        .summary-box h3 {
-            color: #ffd78c;
-            font-size: 2.2rem;
-            margin-bottom: 20px;
-            border-left: 8px solid #ffae42;
+        .summary-block h3 {
+            color: #ffda99;
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            margin-bottom: 18px;
+            border-left: 7px solid #faa837;
             padding-left: 22px;
         }
         .summary-table {
@@ -284,147 +274,144 @@
             background: rgba(255,255,255,0.1);
             border-radius: 28px;
             overflow: hidden;
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 2vw, 1.2rem);
             table-layout: fixed;
         }
         .summary-table th {
-            background: #f0a830;
+            background: #f0a634;
             color: #162b40;
             padding: 16px 8px;
         }
         .summary-table td {
-            color: #f0ebd8;
-            border-bottom: 2px solid #4f7aa6;
+            color: #fff2d4;
+            border-bottom: 2px solid #4b7aa8;
             padding: 16px;
         }
-        .grand-total {
-            background: #031d32;
+        .grand-total-row {
+            background: #05203b;
             font-weight: 800;
         }
 
-        /* spycode ওয়াটারমার্ক - বড় ও পরিষ্কার */
-        .watermark-wrapper {
+        /* spycode ওয়াটারমার্ক - দৃশ্যমান */
+        .watermark {
             text-align: center;
-            margin-top: 35px;
+            margin-top: 30px;
             padding-top: 20px;
-            border-top: 4px dashed #4f77a5;
+            border-top: 4px dashed #5577a5;
         }
-        .watermark-text {
-            background: #0f2d4b;
-            color: #dae6ff;
-            padding: 12px 60px;
+        .watermark span {
+            background: #0f3153;
+            color: #dde9ff;
+            padding: 10px 55px;
             border-radius: 60px;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 800;
             letter-spacing: 3px;
             display: inline-block;
-            box-shadow: 0 5px 18px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
         }
 
-        /* অ্যাডমিন প্যানেল - শুধু ওয়েব */
+        /* অ্যাডমিন প্যানেল (এডিট/রিমুভ) - শুধু ওয়েব ইন্টারফেস */
         .admin-panel {
-            background: #eaf0fa;
+            background: #eaf2fd;
             border-radius: 36px;
-            padding: 28px 25px;
-            margin: 35px 0 15px 0;
+            padding: 28px 24px;
+            margin-top: 30px;
         }
         .admin-panel h3 {
-            color: #0b2a4a;
             font-size: 2rem;
+            color: #10375e;
             margin-bottom: 20px;
         }
         .admin-table {
-            overflow-x: visible;
             background: white;
             border-radius: 28px;
             padding: 8px;
+            overflow-x: auto;
         }
         .admin-table table {
+            min-width: 650px;
             table-layout: fixed;
         }
-        .edit-btn, .remove-btn {
+        .edit-btn, .rm-btn {
             border: none;
-            border-radius: 40px;
+            border-radius: 30px;
             padding: 8px 20px;
             font-weight: bold;
-            font-size: 1rem;
             color: white;
             cursor: pointer;
+            margin: 2px;
         }
         .edit-btn { background: #1790a5; }
-        .remove-btn { background: #c73e4e; }
+        .rm-btn { background: #c43e4f; }
 
-        #downloadStatus {
-            color: #11552b;
-            background: #cbffd6;
-            padding: 15px 25px;
+        #statusMsg {
+            background: #d3f0da;
+            color: #15532d;
+            padding: 14px 25px;
             border-radius: 60px;
             font-weight: bold;
-            font-size: 1.2rem;
             text-align: center;
             margin: 15px 0;
+            font-size: 1.1rem;
         }
 
-        /* মোবাইল ওভাররাইড - ডেস্কটপ স্টাইল ধরে রাখা */
-        @media (max-width: 600px) {
-            .main-card { padding: 20px 15px; }
-            h1 { font-size: 2rem; }
-            .master-item { min-width: 100%; }
-            .member-field { min-width: 100%; }
-            .title-with-clear h2 { font-size: 1.8rem; }
-            .download-png-btn { width: 100%; justify-content: center; }
-            table { font-size: 0.9rem; }
-            th, td { padding: 12px 6px; }
+        /* সম্পূর্ণ ডেস্কটপ মোড নিশ্চিত করতে মোবাইল ব্রেকপয়েন্ট */
+        @media (max-width: 700px) {
+            .calculator { padding: 16px; }
+            .member-form { grid-template-columns: 1fr; }
+            .add-btn { width: 100%; }
+            .control-bar { flex-direction: column; align-items: stretch; }
+            .download-btn { justify-content: center; }
         }
     </style>
 </head>
 <body>
-    <div class="main-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-            <h1>🍛 মিল ক্যালকুলেটর (ডেস্কটপ মোড)</h1>
+    <div class="calculator">
+        <!-- হেডার (শুধু About Me) -->
+        <div class="header">
+            <h1>🍚 মিল ক্যালকুলেটর</h1>
             <a href="SAHED.html" class="about-link">📌 About Me (SAHED)</a>
         </div>
 
-        <!-- মাস্টার ইনপুট (ফুল ডেস্কটপ) -->
-        <div class="master-grid">
-            <div class="master-item"><label>💰 মোট টাকা</label><input type="number" id="mottaka" value="25000"></div>
-            <div class="master-item"><label>🧾 মোট খরচ</label><input type="number" id="motkhoroch" value="18000"></div>
-            <div class="master-item"><label>🍲 মোট মিল</label><input type="number" id="motmil" value="360"></div>
+        <!-- মাস্টার ইনপুট -->
+        <div class="input-grid">
+            <div class="input-field"><label>💰 মোট টাকা</label><input type="number" id="mottaka" value="25000"></div>
+            <div class="input-field"><label>🧾 মোট খরচ</label><input type="number" id="motkhoroch" value="18000"></div>
+            <div class="input-field"><label>🍲 মোট মিল</label><input type="number" id="motmil" value="360"></div>
         </div>
 
-        <!-- অ্যাড মেম্বার প্যানেল -->
-        <div class="add-panel">
-            <div class="panel-title"><span style="background:#113e6b; color:white; padding:8px 28px; border-radius:60px;">➕</span> নতুন সদস্য</div>
-            <div class="member-inputs">
-                <div class="member-field"><label>নাম</label><input type="text" id="memName" placeholder="রাজু"></div>
-                <div class="member-field"><label>মিল</label><input type="number" id="memMil" placeholder="45"></div>
-                <div class="member-field"><label>অতিরিক্ত</label><input type="number" id="memExtra" placeholder="200"></div>
-                <div class="member-field"><label>জমা</label><input type="number" id="memJoma" placeholder="3500"></div>
-                <button class="add-btn" onclick="addMember()">✅ যোগ করুন</button>
+        <!-- অ্যাড মেম্বার (অপ্রয়োজনীয় কিছু নেই) -->
+        <div class="add-section">
+            <div class="add-title"><span>➕</span> নতুন সদস্য যোগ করুন</div>
+            <div class="member-form">
+                <div class="form-field"><label>নাম</label><input type="text" id="memName" placeholder="রাজু"></div>
+                <div class="form-field"><label>মিল</label><input type="number" id="memMil" placeholder="45"></div>
+                <div class="form-field"><label>অতিরিক্ত</label><input type="number" id="memExtra" placeholder="200"></div>
+                <div class="form-field"><label>জমা</label><input type="number" id="memJoma" placeholder="3500"></div>
+                <button class="add-btn" onclick="addMember()">✅ যোগ কর</button>
             </div>
         </div>
 
-        <!-- অ্যাকশন হেডার ও ডাউনলোড -->
-        <div class="action-header">
-            <div class="title-with-clear">
+        <!-- কন্ট্রোল বার (শুধু প্রয়োজনীয়) -->
+        <div class="control-bar">
+            <div class="title-group">
                 <h2>📋 সদস্য তালিকা</h2>
                 <button class="clear-btn" onclick="clearAllMembers()">🗑️ সব মুছুন</button>
             </div>
-            <button class="download-png-btn" onclick="downloadFullPNG()">📥 PNG ডাউনলোড</button>
+            <button class="download-btn" onclick="downloadPNG()">📥 PNG ডাউনলোড</button>
         </div>
 
-        <!-- এই অংশটুকু PNG তে যাবে - সম্পূর্ণ ডেস্কটপ টেবিল -->
-        <div id="pngOutputArea">
-            <!-- টেবিল ফিক্সড - কোন স্ক্রল নয়, পুরো টেবল দৃশ্যমান -->
-            <div class="table-fixed">
-                <table id="memberTable">
-                    <thead><tr><th>নাম</th><th>মোট মিল</th><th>অতিরিক্ত</th><th>জমা</th><th>মিল খরচ</th><th>মোট খরচ</th><th>পাবে/দেবে</th></tr></thead>
-                    <tbody id="memberTableBody"></tbody>
+        <!-- ========== PNG আউটপুট এরিয়া (শুধু আউটপুট) ========= -->
+        <div id="outputArea">
+            <div class="table-container">
+                <table id="memberTbl">
+                    <thead><tr><th>নাম</th><th>মিল</th><th>অতিরিক্ত</th><th>জমা</th><th>মিল খরচ</th><th>মোট খরচ</th><th>পাবে/দেবে</th></tr></thead>
+                    <tbody id="memberBody"></tbody>
                 </table>
             </div>
 
-            <!-- সমষ্টিগত সারাংশ -->
-            <div class="summary-box">
+            <div class="summary-block">
                 <h3>📊 সমষ্টিগত হিসাব</h3>
                 <table class="summary-table">
                     <thead><tr><th>বিবরণ</th><th>মান</th></tr></thead>
@@ -433,28 +420,28 @@
                         <tr><td>অবশিষ্ট টাকা</td><td id="oboshistoShow">-</td></tr>
                         <tr><td>মোট সদস্য</td><td id="totalMembersShow">0</td></tr>
                         <tr><td>মোট জমা</td><td id="totalJomaShow">0</td></tr>
-                        <tr><td>মোট খরচ (মিল+অতি)</td><td id="totalExShow">0</td></tr>
-                        <tr class="grand-total"><td>ম্যানেজার পাবে/দেবে</td><td id="managerBalanceShow">0</td></tr>
+                        <tr><td>মোট খরচ</td><td id="totalExShow">0</td></tr>
+                        <tr class="grand-total-row"><td>ম্যানেজার পাবে/দেবে</td><td id="managerBalanceShow">0</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- spycode ওয়াটারমার্ক (বড়) -->
-            <div class="watermark-wrapper">
-                <span class="watermark-text">🔍 spycode</span>
+            <!-- spycode ওয়াটারমার্ক (সরাসরি) -->
+            <div class="watermark">
+                <span>🔍 spycode</span>
             </div>
         </div>
-        <!-- PNG আউটপুট শেষ -->
+        <!-- ========== PNG আউটপুট শেষ ========= -->
 
-        <div id="downloadStatus"></div>
+        <div id="statusMsg"></div>
 
-        <!-- অ্যাডমিন প্যানেল (শুধু ওয়েব, PNG তে আসবে না) -->
+        <!-- অ্যাডমিন প্যানেল (এডিট/রিমুভ) - শুধু ইন্টারফেস -->
         <div class="admin-panel">
-            <h3>⚙️ সদস্য ব্যবস্থাপনা (এডিট/রিমুভ)</h3>
+            <h3>⚙️ এডিট / রিমুভ সদস্য</h3>
             <div class="admin-table">
                 <table>
                     <thead><tr><th>নাম</th><th>মিল</th><th>অতিরিক্ত</th><th>জমা</th><th>অ্যাকশন</th></tr></thead>
-                    <tbody id="adminTableBody"></tbody>
+                    <tbody id="adminBody"></tbody>
                 </table>
             </div>
         </div>
@@ -464,7 +451,6 @@
         (function() {
             let members = [];
 
-            // ইনপুট এলিমেন্ট
             const mottakaInp = document.getElementById('mottaka');
             const motkhorochInp = document.getElementById('motkhoroch');
             const motmilInp = document.getElementById('motmil');
@@ -473,8 +459,8 @@
             const extraInp = document.getElementById('memExtra');
             const jomaInp = document.getElementById('memJoma');
 
-            const tbody = document.getElementById('memberTableBody');
-            const adminBody = document.getElementById('adminTableBody');
+            const memberBody = document.getElementById('memberBody');
+            const adminBody = document.getElementById('adminBody');
 
             function getBase() {
                 const mottaka = parseFloat(mottakaInp.value) || 0;
@@ -487,11 +473,11 @@
                 };
             }
 
-            function refreshAll() {
+            function refreshUI() {
                 const base = getBase();
                 const milret = base.milret;
                 let totalJoma = 0, totalEx = 0;
-                let rows = '', adminRows = '';
+                let memberRows = '', adminRows = '';
 
                 members.forEach((mem, idx) => {
                     const mil = parseFloat(mem.mil) || 0;
@@ -506,13 +492,13 @@
 
                     let sign = diff > 0 ? `${mem.name} পাবে ${diff.toFixed(2)} টাকা` : (diff < 0 ? `ম্যানেজার পাবে ${Math.abs(diff).toFixed(2)} টাকা` : 'সমান ০');
 
-                    rows += `<tr><td>${mem.name}</td><td>${mil.toFixed(2)}</td><td>${extra.toFixed(2)}</td><td>${joma.toFixed(2)}</td><td>${milKhoroch.toFixed(2)}</td><td>${totalCost.toFixed(2)}</td><td>${sign}</td></tr>`;
+                    memberRows += `<tr><td>${mem.name}</td><td>${mil.toFixed(2)}</td><td>${extra.toFixed(2)}</td><td>${joma.toFixed(2)}</td><td>${milKhoroch.toFixed(2)}</td><td>${totalCost.toFixed(2)}</td><td>${sign}</td></tr>`;
 
-                    adminRows += `<tr><td>${mem.name}</td><td>${mil}</td><td>${extra}</td><td>${joma}</td><td><button class="edit-btn" onclick="editMember(${idx})">সম্পাদনা</button><button class="remove-btn" onclick="removeMember(${idx})">মুছুন</button></td></tr>`;
+                    adminRows += `<tr><td>${mem.name}</td><td>${mil}</td><td>${extra}</td><td>${joma}</td><td><button class="edit-btn" onclick="editMember(${idx})">সম্পাদনা</button><button class="rm-btn" onclick="removeMember(${idx})">মুছুন</button></td></tr>`;
                 });
 
-                tbody.innerHTML = rows || '<tr><td colspan="7" style="text-align:center; padding:30px;">👥 কোনো সদস্য নেই</td></tr>';
-                adminBody.innerHTML = adminRows || '<tr><td colspan="5" style="text-align:center;">কোনো সদস্য নেই</td></tr>';
+                memberBody.innerHTML = memberRows || '<tr><td colspan="7" style="padding:40px; text-align:center;">👥 কোনো সদস্য নেই। নতুন যোগ করুন</td></tr>';
+                adminBody.innerHTML = adminRows || '<tr><td colspan="5" style="padding:30px; text-align:center;">কোনো সদস্য নেই</td></tr>';
 
                 document.getElementById('rateShow').innerText = milret.toFixed(2);
                 document.getElementById('oboshistoShow').innerText = base.oboshisto.toFixed(2);
@@ -528,76 +514,63 @@
                 const extra = parseFloat(extraInp.value);
                 const joma = parseFloat(jomaInp.value);
                 if (isNaN(mil) || mil<0 || isNaN(extra) || extra<0 || isNaN(joma) || joma<0) {
-                    alert('সঠিক সংখ্যা দিন (ঋণাত্মক নয়)'); return;
+                    alert('মিল, অতিরিক্ত, জমা সঠিক সংখ্যা দিন'); return;
                 }
                 members.push({ name, mil, extra, joma });
                 nameInp.value = ''; milInp.value = ''; extraInp.value = ''; jomaInp.value = '';
-                refreshAll();
+                refreshUI();
             };
 
-            window.removeMember = function(i) {
-                if (i>=0 && i<members.length) { members.splice(i,1); refreshAll(); }
-            };
-
-            window.clearAllMembers = function() {
-                if (members.length && confirm('সব মুছবেন?')) { members = []; refreshAll(); }
-            };
-
+            window.removeMember = function(i) { if(i>=0 && i<members.length) { members.splice(i,1); refreshUI(); } };
+            window.clearAllMembers = function() { if(members.length && confirm('সব সদস্য মুছবেন?')) { members = []; refreshUI(); } };
             window.editMember = function(i) {
                 const m = members[i];
-                if (!m) return;
+                if(!m) return;
                 nameInp.value = m.name; milInp.value = m.mil; extraInp.value = m.extra; jomaInp.value = m.joma;
-                if (confirm('এডিট করতে সরিয়ে পুনরায় যোগ করুন')) {
-                    members.splice(i,1); refreshAll();
-                }
+                if(confirm('এডিট করতে সরান')) { members.splice(i,1); refreshUI(); }
             };
 
-            [mottakaInp, motkhorochInp, motmilInp].forEach(el => el.addEventListener('input', refreshAll));
+            [mottakaInp, motkhorochInp, motmilInp].forEach(el => el.addEventListener('input', refreshUI));
 
-            // ডেমো ডাটা (বড় লিস্ট)
+            // ডেমো ডাটা (প্রয়োজনীয়)
             if (!members.length) {
                 members.push({ name:'রাজু', mil:50, extra:100, joma:2800 });
                 members.push({ name:'সুমি', mil:42, extra:0, joma:2100 });
                 members.push({ name:'হাসান', mil:38, extra:250, joma:2200 });
-                members.push({ name:'নীপা', mil:65, extra:50, joma:3700 });
-                members.push({ name:'তানভীর', mil:72, extra:300, joma:4500 });
-                refreshAll();
+                refreshUI();
             }
 
-            // ===== PNG ডাউনলোড - ফুল টেবিল, ডেস্কটপ মোড =====
-            window.downloadFullPNG = function() {
-                const area = document.getElementById('pngOutputArea');
-                const status = document.getElementById('downloadStatus');
-                status.innerText = '⏳ PNG তৈরী হচ্ছে (সম্পূর্ণ টেবিল, spycode ওয়াটারমার্ক)...';
+            // PNG ডাউনলোড - সম্পূর্ণ টেবিল, ডেস্কটপ ভিউ
+            window.downloadPNG = function() {
+                const area = document.getElementById('outputArea');
+                const status = document.getElementById('statusMsg');
+                status.innerText = '⏳ PNG তৈরি হচ্ছে (spycode ওয়াটারমার্ক)...';
 
-                // ডেস্কটপ ফুল ভিউ ক্যাপচার করতে scale বেশি + উইন্ডো সাইজ উপেক্ষা
                 html2canvas(area, {
-                    scale: 2.5,              // অতি উচ্চ রেজোলিউশন
+                    scale: 2.2,
                     backgroundColor: '#ffffff',
+                    windowWidth: 1300,   // ডেস্কটপ মোড সিমুলেট
+                    windowHeight: 1800,
                     logging: false,
-                    allowTaint: true,
-                    useCORS: true,
-                    windowWidth: 1400,        // ডেস্কটপ ভিউপোর্ট সিমুলেট
-                    windowHeight: 2000
+                    allowTaint: true
                 }).then(canvas => {
-                    // অতিরিক্ত তির্যক spycode (ক্যানভাসে)
                     const ctx = canvas.getContext('2d');
                     ctx.font = 'bold 34px "Segoe UI", Arial, sans-serif';
-                    ctx.fillStyle = 'rgba(160, 180, 210, 0.23)';
+                    ctx.fillStyle = 'rgba(140, 170, 210, 0.25)';
                     ctx.rotate(-0.15);
                     ctx.fillText('spycode', 250, canvas.height - 70);
                     ctx.rotate(0.15);
 
                     const link = document.createElement('a');
-                    link.download = 'meal_spycode_full.png';
+                    link.download = 'meal_spycode_desktop.png';
                     link.href = canvas.toDataURL('image/png');
                     link.click();
-                    status.innerText = '✅ ডাউনলোড সম্পন্ন (সম্পূর্ণ টেবিল + spycode)';
-                    setTimeout(() => status.innerText = '', 4000);
+                    status.innerText = '✅ সম্পন্ন! (পুরো টেবিল + spycode)';
+                    setTimeout(()=> status.innerText = '', 4000);
                 }).catch(e => { status.innerText = '❌ ব্যর্থ'; console.error(e); });
             };
 
-            refreshAll();
+            refreshUI();
         })();
     </script>
 </body>
