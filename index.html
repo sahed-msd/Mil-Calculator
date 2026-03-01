@@ -1,262 +1,942 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>মিল ক্যালকুলেটর</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
+    <title>🍚 মিল ক্যালকুলেটর | অটো মোড | spycode</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0b263b 0%, #1a4a7a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 10px;
+        }
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
-body{background:#0b263b;padding:20px;display:flex;justify-content:center}
-.container{width:100%;max-width:1100px;background:#fff;border-radius:30px;padding:25px}
+        /* ডেস্কটপ মোড */
+        .desktop-mode {
+            width: 100%;
+            max-width: 1350px;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 40px;
+            margin: 25px auto;
+            padding: 40px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+            border: 3px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+        }
 
-h1{margin-bottom:20px}
-.card{background:#f3f7ff;padding:20px;border-radius:20px;margin-bottom:20px}
+        /* মোবাইল মোড */
+        .android-mode {
+            width: 100%;
+            max-width: 500px;
+            background: #f8faff;
+            border-radius: 32px 32px 0 0;
+            margin-top: auto;
+            padding: 25px 20px 35px;
+            box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.3);
+            border-top: 5px solid #ffb84d;
+        }
 
-input{padding:10px;border-radius:30px;border:1px solid #ccc;width:100%}
-button{padding:10px 20px;border-radius:30px;border:none;font-weight:bold;cursor:pointer}
+        /* হেডার */
+        .desktop-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px dashed #31699e;
+            padding-bottom: 25px;
+            margin-bottom: 30px;
+        }
+        .desktop-header h1 {
+            color: #0c3253;
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #0c3253, #1a5cb0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .about-link {
+            background: linear-gradient(45deg, #ffb347, #ff8c42);
+            color: #0e263b;
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.3rem;
+            border: 3px solid #ffe29c;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255, 184, 77, 0.4);
+        }
+        .about-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 184, 77, 0.6);
+        }
 
-.add-btn{background:#134579;color:#fff}
-.clear-btn{background:#c43e4f;color:#fff}
-.download-btn{background:#1d6e41;color:#fff}
+        .android-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .android-header h1 {
+            color: #10355e;
+            font-size: 2.2rem;
+            font-weight: 800;
+        }
+        .android-chip {
+            background: linear-gradient(45deg, #ffb84d, #ff9a3d);
+            color: #122b41;
+            padding: 10px 22px;
+            border-radius: 35px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            border: 3px solid #ffeac2;
+            box-shadow: 0 6px 20px rgba(255, 184, 77, 0.4);
+        }
 
-table{width:100%;border-collapse:collapse;margin-top:15px}
-th,td{padding:8px;border:1px solid #ddd;text-align:center}
-th{background:#0e3b70;color:#fff}
+        /* ইনপুট কার্ড */
+        .input-card {
+            background: linear-gradient(145deg, #ffffff, #f0f8ff);
+            border-radius: 30px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 12px 30px rgba(0, 20, 40, 0.15);
+            border: 2px solid #d7e5ff;
+        }
 
-.summary{margin-top:20px;padding:15px;background:#082b4a;color:#fff;border-radius:20px}
+        .desktop-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+        .android-flex {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
 
-.admin{margin-top:20px}
+        .input-field label {
+            display: block;
+            font-weight: 700;
+            color: #103f6b;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        .input-field input {
+            width: 100%;
+            padding: 18px 22px;
+            border: 3px solid #b0caf5;
+            border-radius: 45px;
+            font-size: 1.2rem;
+            background: linear-gradient(145deg, #ffffff, #f8fbff);
+            outline: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .input-field input:focus {
+            border-color: #1a5cb0;
+            box-shadow: 0 0 0 4px rgba(26,92,176,0.25);
+            transform: translateY(-2px);
+        }
 
-.status{margin-top:10px;font-weight:bold}
-</style>
+        /* অ্যাড মেম্বার */
+        .add-card {
+            background: linear-gradient(145deg, #dcebff, #c3dfff);
+            border-radius: 30px;
+            padding: 25px 22px;
+            margin-bottom: 25px;
+            border: 2px solid #b8d7ff;
+        }
+        .add-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #103b66;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .member-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+        }
+        .member-input {
+            flex: 1 1 140px;
+            min-width: 120px;
+        }
+        .member-input label {
+            font-weight: 700;
+            color: #0a2e51;
+            font-size: 1rem;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .member-input input {
+            width: 100%;
+            padding: 16px 18px;
+            border-radius: 45px;
+            border: 3px solid #adc6f0;
+            background: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .member-input input:focus {
+            border-color: #1a5cb0;
+            box-shadow: 0 0 0 3px rgba(26,92,176,0.2);
+        }
+        .add-button {
+            background: linear-gradient(45deg, #134579, #1a5cb0);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 18px 35px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            cursor: pointer;
+            border: 3px solid #9abdf7;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            box-shadow: 0 8px 25px rgba(19, 69, 121, 0.4);
+        }
+        .add-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(19, 69, 121, 0.6);
+        }
+
+        /* কন্ট্রোল বার */
+        .control-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin: 25px 0;
+            gap: 15px;
+        }
+        .title-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .title-group h2 {
+            color: #102f50;
+            font-size: 2.2rem;
+            font-weight: 800;
+        }
+        .clear-btn {
+            background: linear-gradient(45deg, #c93e4e, #d9546a);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 28px;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: 0 6px 20px rgba(201, 62, 78, 0.4);
+            transition: all 0.3s ease;
+        }
+        .clear-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(201, 62, 78, 0.6);
+        }
+        .download-btn {
+            background: linear-gradient(45deg, #1d6e41, #28a745);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 16px 40px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(29, 110, 65, 0.5);
+            transition: all 0.3s ease;
+        }
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(29, 110, 65, 0.7);
+        }
+
+        /* আউটপুট এরিয়া */
+        #outputArea {
+            background: linear-gradient(145deg, #ffffff, #f8fbff);
+            border-radius: 35px;
+            padding: 30px 25px;
+            border: 4px solid #bdd6ff;
+            margin: 25px 0;
+            box-shadow: 0 20px 50px rgba(0, 20, 40, 0.15);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 28px;
+            background: linear-gradient(145deg, #edf4ff, #e3f0ff);
+            padding: 8px;
+            margin-bottom: 30px;
+            border: 2px solid #c7dfff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 25px;
+            overflow: hidden;
+            font-size: 1.1rem;
+            min-width: 700px;
+            box-shadow: 0 10px 30px rgba(0, 20, 40, 0.1);
+        }
+        th {
+            background: linear-gradient(45deg, #0e3b70, #1a5cb0);
+            color: white;
+            padding: 18px 12px;
+            font-weight: 800;
+            white-space: nowrap;
+            font-size: 1.1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        td {
+            padding: 16px 12px;
+            border-bottom: 3px solid #dae6ff;
+            color: #11212e;
+            text-align: center;
+            white-space: nowrap;
+            font-weight: 600;
+            transition: background 0.2s ease;
+        }
+        tr:hover td {
+            background: #f0f8ff;
+        }
+
+        /* সমষ্টি কার্ড */
+        .summary-card {
+            background: linear-gradient(115deg, #082b4a, #1b4e7a, #2a69a0);
+            border-radius: 32px;
+            padding: 28px 25px;
+            color: white;
+            box-shadow: 0 20px 50px rgba(8, 43, 74, 0.6);
+        }
+        .summary-card h3 {
+            color: #ffda99;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            border-left: 8px solid #faa837;
+            padding-left: 22px;
+            font-weight: 900;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 25px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.3rem;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            padding: 12px 8px;
+            font-weight: 700;
+        }
+        .summary-item.total {
+            grid-column: span 2;
+            background: linear-gradient(45deg, #05203b, #0a406e);
+            border-radius: 25px;
+            padding: 18px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-top: 12px;
+            border-bottom: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* ওয়াটারমার্ক */
+        .watermark {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 4px dashed #5577a5;
+        }
+        .watermark span {
+            background: linear-gradient(45deg, #0f3153, #1a4a7a);
+            color: #dde9ff;
+            padding: 15px 70px;
+            border-radius: 70px;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            display: inline-block;
+            box-shadow: 0 10px 30px rgba(15, 49, 83, 0.6);
+            border: 3px solid #4a6a9a;
+        }
+
+        /* অ্যাডমিন প্যানেল */
+        .admin-panel {
+            background: linear-gradient(145deg, #eaf2fd, #e0ecff);
+            border-radius: 30px;
+            padding: 25px 22px;
+            margin-top: 30px;
+            border: 2px solid #c7dfff;
+        }
+        .admin-panel h3 {
+            font-size: 2rem;
+            color: #10375e;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+        .admin-table {
+            overflow-x: auto;
+            background: white;
+            border-radius: 28px;
+            padding: 8px;
+            box-shadow: 0 10px 30px rgba(0, 20, 40, 0.1);
+        }
+        .admin-table table {
+            min-width: 550px;
+            font-size: 1rem;
+        }
+        .edit-btn, .rm-btn {
+            border: none;
+            border-radius: 35px;
+            padding: 10px 25px;
+            font-weight: 800;
+            color: white;
+            margin: 3px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .edit-btn { 
+            background: linear-gradient(45deg, #1790a5, #1eb8c8); 
+        }
+        .rm-btn { 
+            background: linear-gradient(45deg, #c43e4f, #e05a6d); 
+        }
+        .edit-btn:hover, .rm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        #statusMsg {
+            background: linear-gradient(45deg, #d3f0da, #c8e6c9);
+            color: #15532d;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: 800;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2rem;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+            border: 3px solid #a5d6a7;
+        }
+
+        /* রেসপন্সিভ */
+        @media (max-width: 768px) {
+            .desktop-mode {
+                margin: 15px 10px;
+                padding: 25px 20px;
+                border-radius: 25px;
+            }
+            .desktop-header h1 {
+                font-size: 2.2rem;
+            }
+            .member-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .add-button {
+                width: 100%;
+                justify-content: center;
+            }
+            .control-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 20px;
+            }
+            .download-btn {
+                justify-content: center;
+            }
+            .desktop-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        /* লোডিং অ্যানিমেশন */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+    </style>
 </head>
-
 <body>
+    <div id="appContainer"></div>
 
-<div class="container">
+    <script>
+        (function() {
+            // ডেটা স্টোরেজ
+            let members = JSON.parse(localStorage.getItem('mealMembers')) || [
+                { name: 'রাজু', mil: 50, extra: 100, joma: 2800 },
+                { name: 'সুমি', mil: 42, extra: 0, joma: 2100 },
+                { name: 'হাসান', mil: 38, extra: 250, joma: 2200 }
+            ];
 
-<h1>🍚 মিল ক্যালকুলেটর</h1>
+            function isMobile() {
+                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
 
-<div class="card">
-মোট টাকা: <input type="number" id="mottaka" value="25000"><br><br>
-মোট খরচ: <input type="number" id="motkhoroch" value="18000"><br><br>
-মোট মিল: <input type="number" id="motmil" value="360">
-</div>
+            function saveMembers() {
+                localStorage.setItem('mealMembers', JSON.stringify(members));
+            }
 
-<div class="card">
-<h3>নতুন সদস্য</h3><br>
-নাম <input type="text" id="memName"><br><br>
-মিল <input type="number" id="memMil"><br><br>
-অতিরিক্ত <input type="number" id="memExtra"><br><br>
-জমা <input type="number" id="memJoma"><br><br>
-<button class="add-btn" onclick="addMember()">যোগ করুন</button>
-</div>
+            function renderApp() {
+                const container = document.getElementById('appContainer');
+                const isMobileDevice = isMobile();
+                
+                const html = isMobileDevice ? getMobileHTML() : getDesktopHTML();
+                container.innerHTML = html;
 
-<button class="clear-btn" onclick="clearAll()">সব মুছুন</button>
-<button class="download-btn" onclick="downloadPNG()">PNG ডাউনলোড</button>
+                // ইভেন্ট লিসেনার সেটআপ
+                setupEventListeners();
+                updateOutputArea();
+            }
 
-<div id="output"></div>
-<div class="status" id="status"></div>
+            function getDesktopHTML() {
+                return ` <div class="desktop-mode">
+                    <div class="desktop-header">
+                        <h1>🍚 মিল ক্যালকুলেটর</h1>
+                        <a href="SAHED.html" class="about-link" target="_blank">📌 About Me (SAHED)</a>
+                    </div>
 
-<div class="admin">
-<h3>এডিট / রিমুভ</h3>
-<table>
-<thead>
-<tr><th>নাম</th><th>মিল</th><th>অতি</th><th>জমা</th><th>অ্যাকশন</th></tr>
-</thead>
-<tbody id="adminBody"></tbody>
-</table>
-</div>
+                    <div class="input-card">
+                        <div class="desktop-grid">
+                            <div class="input-field">
+                                <label>💰 মোট টাকা</label>
+                                <input type="number" id="mottaka" value="25000" min="0">
+                            </div>
+                            <div class="input-field">
+                                <label>🧾 মোট খরচ</label>
+                                <input type="number" id="motkhoroch" value="18000" min="0">
+                            </div>
+                            <div class="input-field">
+                                <label>🍲 মোট মিল</label>
+                                <input type="number" id="motmil" value="360" min="1">
+                            </div>
+                        </div>
+                    </div>
 
-</div>
+                    <div class="add-card">
+                        <div class="add-title">➕ নতুন সদস্য যোগ করুন</div>
+                        <div class="member-form">
+                            <div class="member-input">
+                                <label>👤 নাম</label>
+                                <input type="text" id="memName" placeholder="রাজু">
+                            </div>
+                            <div class="member-input">
+                                <label>🍚 মিল</label>
+                                <input type="number" id="memMil" placeholder="45" min="0">
+                            </div>
+                            <div class="member-input">
+                                <label>💸 অতিরিক্ত</label>
+                                <input type="number" id="memExtra" placeholder="200" min="0">
+                            </div>
+                            <div class="member-input">
+                                <label>💰 জমা</label>
+                                <input type="number" id="memJoma" placeholder="3500" min="0">
+                            </div>
+                            <button class="add-button" onclick="addMember()">✅ যোগ করুন</button>
+                        </div>
+                    </div>
 
-<script>
+                    <div class="control-bar">
+                        <div class="title-group">
+                            <h2>📋 সদস্য তালিকা</h2>
+                            <button class="clear-btn" onclick="clearAllMembers()">🗑️ সব মুছুন</button>
+                        </div>
+                        <button class="download-btn" onclick="downloadPNG()">
+                            📥 PNG ডাউনলোড
+                        </button>
+                    </div>
 
-let members = JSON.parse(localStorage.getItem("members")) || [
-{name:'রাজু',mil:50,extra:100,joma:2800},
-{name:'সুমি',mil:42,extra:0,joma:2100},
-{name:'হাসান',mil:38,extra:250,joma:2200}
-];
+                    <div id="outputArea"></div>
+                    <div id="statusMsg"></div>
 
-function saveData(){
-localStorage.setItem("members",JSON.stringify(members));
-}
+                    <div class="admin-panel">
+                        <h3>⚙️ এডিট / রিমুভ সদস্য</h3>
+                        <div class="admin-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>নাম</th>
+                                        <th>মিল</th>
+                                        <th>অতিরিক্ত</th>
+                                        <th>জমা</th>
+                                        <th>অ্যাকশন</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>`;
+            }
 
-function update(){
+            function getMobileHTML() {
+                return ` <div class="android-mode">
+                    <div class="android-header">
+                        <h1>🍚 মিল ক্যালক</h1>
+                        <a href="SAHED.html" class="android-chip" target="_blank">📌 SAHED</a>
+                    </div>
 
-let mottaka = Number(mottakaInput.value)||0;
-let motkhoroch = Number(motkhorochInput.value)||0;
-let motmil = Number(motmilInput.value)||0;
+                    <div class="input-card">
+                        <div class="android-flex">
+                            <div class="input-field">
+                                <label>💰 মোট টাকা</label>
+                                <input type="number" id="mottaka" value="25000" min="0">
+                            </div>
+                            <div class="input-field">
+                                <label>🧾 মোট খরচ</label>
+                                <input type="number" id="motkhoroch" value="18000" min="0">
+                            </div>
+                            <div class="input-field">
+                                <label>🍲 মোট মিল</label>
+                                <input type="number" id="motmil" value="360" min="1">
+                            </div>
+                        </div>
+                    </div>
 
-let milRate = motmil>0 ? motkhoroch/motmil : 0;
+                    <div class="add-card">
+                        <div class="add-title">➕ নতুন সদস্য</div>
+                        <div class="member-form">
+                            <div class="member-input">
+                                <label>👤 নাম</label>
+                                <input type="text" id="memName" placeholder="রাজু">
+                            </div>
+                            <div class="member-input">
+                                <label>🍚 মিল</label>
+                                <input type="number" id="memMil" placeholder="45" min="0">
+                            </div>
+                            <div class="member-input">
+                                <label>💸 অতিরিক্ত</label>
+                                <input type="number" id="memExtra" placeholder="200" min="0">
+                            </div>
+                            <div class="member-input">
+                                <label>💰 জমা</label>
+                                <input type="number" id="memJoma" placeholder="3500" min="0">
+                            </div>
+                            <button class="add-button" onclick="addMember()">✅ যোগ করুন</button>
+                        </div>
+                    </div>
 
-let totalJoma=0;
-let totalCostAll=0;
-let rows="";
+                    <div class="control-bar">
+                        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                            <h2 style="font-size:1.8rem; margin: 0;">📋 তালিকা</h2>
+                            <button class="clear-btn" onclick="clearAllMembers()">🗑️ মুছুন</button>
+                        </div>
+                        <button class="download-btn" style="width:100%; justify-content: center;" onclick="downloadPNG()">
+                            📥 PNG ডাউনলোড
+                        </button>
+                    </div>
 
-members.forEach((m,i)=>{
+                    <div id="outputArea"></div>
+                    <div id="statusMsg"></div>
 
-let milCost = milRate * m.mil;
-let totalCost = milCost + m.extra;
-let diff = m.joma - totalCost;
+                    <div class="admin-panel">
+                        <h3 style="font-size:1.7rem;">⚙️ এডিট/রিমুভ</h3>
+                        <div class="admin-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>নাম</th>
+                                        <th>মিল</th>
+                                        <th>অতি</th>
+                                        <th>জমা</th>
+                                        <th>অ্যাকশন</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>`;
+            }
 
-totalJoma+=m.joma;
-totalCostAll+=totalCost;
+            function setupEventListeners() {
+                const inputs = ['mottaka', 'motkhoroch', 'motmil'];
+                inputs.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.addEventListener('input', updateOutputArea);
+                    }
+                });
+            }
 
-let status="";
-if(diff>0) status=`পাবে ${diff.toFixed(2)}`;
-else if(diff<0) status=`দেবে ${Math.abs(diff).toFixed(2)}`;
-else status="সমান";
+            function updateOutputArea() {
+                const outputDiv = document.getElementById('outputArea');
+                if (!outputDiv) return;
 
-rows+=`
-<tr>
-<td>${m.name}</td>
-<td>${m.mil}</td>
-<td>${m.extra}</td>
-<td>${m.joma}</td>
-<td>${milCost.toFixed(2)}</td>
-<td>${totalCost.toFixed(2)}</td>
-<td>${status}</td>
-</tr>
-`;
+                const mottaka = parseFloat(document.getElementById('mottaka')?.value) || 0;
+                const motkhoroch = parseFloat(document.getElementById('motkhoroch')?.value) || 0;
+                const motmil = parseFloat(document.getElementById('motmil')?.value) || 1;
+                
+                const milret = motmil ? motkhoroch / motmil : 0;
+                const oboshisto = mottaka - motkhoroch;
 
-});
+                let totalJoma = 0, totalEx = 0;
+                let memberRows = '';
 
-let managerDiff = totalJoma - totalCostAll;
-let managerText = managerDiff>0 ?
-`ম্যানেজার পাবে ${managerDiff.toFixed(2)}` :
-managerDiff<0 ?
-`ম্যানেজার দেবে ${Math.abs(managerDiff).toFixed(2)}` :
-"সমান";
+                members.forEach(mem => {
+                    const mil = parseFloat(mem.mil) || 0;
+                    const extra = parseFloat(mem.extra) || 0;
+                    const joma = parseFloat(mem.joma) || 0;
+                    
+                    const milKhoroch = milret * mil;
+                    const totalCost = milKhoroch + extra;
+                    const diff = joma - totalCost;
 
-output.innerHTML=`
-<table>
-<thead>
-<tr>
-<th>নাম</th>
-<th>মিল</th>
-<th>অতিরিক্ত</th>
-<th>জমা</th>
-<th>মিল খরচ</th>
-<th>মোট খরচ</th>
-<th>পাবে/দেবে</th>
-</tr>
-</thead>
-<tbody>
-${rows || '<tr><td colspan="7">কোনো সদস্য নেই</td></tr>'}
-</tbody>
-</table>
+                    totalJoma += joma;
+                    totalEx += totalCost;
 
-<div class="summary">
-মিল রেট: ${milRate.toFixed(2)} <br>
-মোট জমা: ${totalJoma.toFixed(2)} <br>
-মোট খরচ: ${totalCostAll.toFixed(2)} <br>
-${managerText}
-</div>
-`;
+                    let signText = diff > 0 ? `✅ ${mem.name} পাবে ${diff.toFixed(2)}` : 
+                                  (diff < 0 ? `❌ ${mem.name} দেবে ${Math.abs(diff).toFixed(2)}` : '⚖️ সমান');
 
-updateAdmin();
-saveData();
-}
+                    memberRows += `<tr>
+                        <td style="font-weight: 800; color: #0c3253;">${mem.name}</td>
+                        <td>${mil.toFixed(1)}</td>
+                        <td>${extra.toFixed(1)}</td>
+                        <td style="font-weight: 800; color: #1d6e41;">${joma.toFixed(1)}</td>
+                        <td style="color: #1a5cb0; font-weight: 700;">${milKhoroch.toFixed(1)}</td>
+                        <td style="background: #fff3cd; font-weight: 700;">${totalCost.toFixed(1)}</td>
+                        <td style="font-size: 1.1rem; font-weight: 900;">${signText}</td>
+                    </tr>`;
+                });
 
-function updateAdmin(){
-let html="";
-members.forEach((m,i)=>{
-html+=`
-<tr>
-<td>${m.name}</td>
-<td>${m.mil}</td>
-<td>${m.extra}</td>
-<td>${m.joma}</td>
-<td>
-<button onclick="editMember(${i})">এডিট</button>
-<button onclick="removeMember(${i})">মুছুন</button>
-</td>
-</tr>`;
-});
-adminBody.innerHTML=html || "<tr><td colspan='5'>কেউ নেই</td></tr>";
-}
+                const summaryHTML = `
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>👤 নাম</th>
+                                    <th>🍚 মিল</th>
+                                    <th>💸 অতিরিক্ত</th>
+                                    <th>💰 জমা</th>
+                                    <th>🥘 মিল খরচ</th>
+                                    <th>💳 মোট খরচ</th>
+                                    <th>📊 পাবে/দেবে</th>
+                                </tr>
+                            </thead>
+                            <tbody>${memberRows || '<tr><td colspan="7" style="text-align:center; padding:60px; font-size:1.5rem; color:#6c757d;"><span>👥 কোনো সদস্য নেই</span><br><small>উপরের ফর্ম থেকে সদস্য যোগ করুন</small></td></tr>'}</tbody>
+                        </table>
+                    </div>
+                    <div class="summary-card">
+                        <h3>📊 সমষ্টিগত হিসাব</h3>
+                        <div class="summary-grid">
+                            <div class="summary-item"><span>📈 মিল রেট</span><span style="color:#ffda99;">${milret.toFixed(2)} টাকা</span></div>
+                            <div class="summary-item"><span>💵 অবশিষ্ট টাকা</span><span style="color:#28a745;">${oboshisto.toFixed(2)} টাকা</span></div>
+                            <div class="summary-item"><span>👥 মোট সদস্য</span><span>${members.length} জন</span></div>
+                            <div class="summary-item"><span>💰 মোট জমা</span><span style="color:#1d6e41;">${totalJoma.toFixed(2)} টাকা</span></div>
+                            <div class="summary-item"><span>💳 মোট খরচ</span><span style="color:#dc3545;">${totalEx.toFixed(2)} টাকা</span></div>
+                            <div class="summary-item total">
+                                <span>🏆 ম্যানেজারের ব্যালেন্স</span>
+                                <span style="color: ${totalJoma >= totalEx ? '#28a745' : '#dc3545'}; font-size: 1.8rem;">
+                                    ${totalJoma >= totalEx ? '✅' : '❌'} ${(totalJoma - totalEx).toFixed(2)} টাকা
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="watermark">
+                        <span>🔍 Made with ❤️ by spycode</span>
+                    </div>
+                `;
 
-function addMember(){
+                outputDiv.innerHTML = summaryHTML;
+                updateAdminTable();
+            }
 
-let name=memName.value.trim()||"অতিথি";
-let mil=Number(memMil.value);
-let extra=Number(memExtra.value);
-let joma=Number(memJoma.value);
+            function updateAdminTable() {
+                const adminBody = document.getElementById('adminBody');
+                if (!adminBody) return;
 
-if(isNaN(mil)||isNaN(extra)||isNaN(joma)||mil<0||extra<0||joma<0){
-alert("সঠিক সংখ্যা দিন");
-return;
-}
+                let rows = '';
+                members.forEach((mem, idx) => {
+                    rows += `<tr>
+                        <td style="font-weight: 800;">${mem.name}</td>
+                        <td>${mem.mil}</td>
+                        <td>${mem.extra}</td>
+                        <td style="color: #1d6e41; font-weight: 700;">${mem.joma}</td>
+                        <td>
+                            <button class="edit-btn" onclick="editMember(${idx})">✏️ সম্পাদনা</button>
+                            <button class="rm-btn" onclick="removeMember(${idx})">🗑️ মুছুন</button>
+                        </td>
+                    </tr>`;
+                });
+                adminBody.innerHTML = rows || '<tr><td colspan="5" style="text-align:center; padding:30px; color:#6c757d; font-size:1.2rem;">📝 কোনো সদস্য নেই</td></tr>';
+            }
 
-members.push({name,mil,extra,joma});
+            // গ্লোবাল ফাংশনস
+            window.addMember = function() {
+                const name = document.getElementById('memName')?.value.trim() || 'অতিথি';
+                const mil = parseFloat(document.getElementById('memMil')?.value) || 0;
+                const extra = parseFloat(document.getElementById('memExtra')?.value) || 0;
+                const joma = parseFloat(document.getElementById('memJoma')?.value) || 0;
 
-memName.value="";
-memMil.value="";
-memExtra.value="";
-memJoma.value="";
+                if (!name || mil < 0 || extra < 0 || joma < 0) {
+                    showStatus('❌ সঠিক তথ্য দিন!', 'error');
+                    return;
+                }
 
-update();
-}
+                members.push({ name, mil, extra, joma });
+                saveMembers();
+                
+                // ফিল্ড ক্লিয়ার
+                document.getElementById('memName').value = '';
+                document.getElementById('memMil').value = '';
+                document.getElementById('memExtra').value = '';
+                document.getElementById('memJoma').value = '';
+                
+                updateOutputArea();
+                showStatus(`✅ ${name} সদস্য যোগ হয়েছে!`, 'success');
+            };
 
-function removeMember(i){
-members.splice(i,1);
-update();
-}
+            window.removeMember = function(index) {
+                if (index >= 0 && index < members.length) {
+                    const name = members[index].name;
+                    members.splice(index, 1);
+                    saveMembers();
+                    updateOutputArea();
+                    showStatus(`🗑️ ${name} সদস্য মুছে ফেলা হয়েছে`, 'success');
+                }
+            };
 
-function editMember(i){
-let m=members[i];
-memName.value=m.name;
-memMil.value=m.mil;
-memExtra.value=m.extra;
-memJoma.value=m.joma;
-members.splice(i,1);
-update();
-}
+            window.clearAllMembers = function() {
+                if (members.length === 0) return;
+                if (confirm(`সমস্ত ${members.length} সদস্য মুছে ফেলবেন?\n\nএই কাজটি পুনরুদ্ধার করা যাবে না!`)) {
+                    members = [];
+                    saveMembers();
+                    updateOutputArea();
+                    showStatus('🗑️ সমস্ত সদস্য মুছে ফেলা হয়েছে', 'success');
+                }
+            };
 
-function clearAll(){
-if(confirm("সব মুছবেন?")){
-members=[];
-update();
-}
-}
+            window.editMember = function(index) {
+                const mem = members[index];
+                if (!mem) return;
+                
+                document.getElementById('memName').value = mem.name;
+                document.getElementById('memMil').value = mem.mil;
+                document.getElementById('memExtra').value = mem.extra;
+                document.getElementById('memJoma').value = mem.joma;
+                
+                if (confirm(`✏️ "${mem.name}" সম্পাদনা করতে:\n1. প্রথমে "মুছুন" বাটন চাপুন\n2. তারপর নতুন করে যোগ করুন\n\nএখনই মুছে ফেলবেন?`)) {
+                    members.splice(index, 1);
+                    saveMembers();
+                    updateOutputArea();
+                }
+            };
 
-function downloadPNG(){
-status.innerText="PNG তৈরি হচ্ছে...";
+            window.downloadPNG = async function() {
+                const outputArea = document.getElementById('outputArea');
+                const status = document.getElementById('statusMsg');
+                if (!outputArea) return;
 
-html2canvas(output).then(canvas=>{
-let ctx=canvas.getContext("2d");
-ctx.save();
-ctx.globalAlpha=0.2;
-ctx.font="30px Arial";
-ctx.rotate(-0.2);
-ctx.fillText("spycode",200,canvas.height-80);
-ctx.restore();
+                status.textContent = '⏳ PNG তৈরি হচ্ছে...';
+                status.classList.add('loading');
 
-let link=document.createElement("a");
-link.download="meal.png";
-link.href=canvas.toDataURL();
-link.click();
+                try {
+                    const canvas = await html2canvas(outputArea, {
+                        scale: window.devicePixelRatio > 1 ? 2.5 : 2,
+                        backgroundColor: '#ffffff',
+                        width: outputArea.scrollWidth,
+                        height: outputArea.scrollHeight,
+                        logging: false,
+                        allowTaint: true,
+                        useCORS: true,
+                        scrollX: 0,
+                        scrollY: 0
+                    });
 
-status.innerText="ডাউনলোড সম্পন্ন";
-setTimeout(()=>status.innerText="",3000);
-});
-}
+                    // spycode ওয়াটারমার্ক যোগ করা
+                    const ctx = canvas.getContext('2d');
+                    ctx.save();
+                    ctx.translate(canvas.width * 0.1, canvas.height * 0.92);
+                    ctx.rotate(-0.08);
+                    ctx.font = 'bold 48px "Segoe UI", Arial, sans-serif';
+                    ctx.fillStyle = 'rgba(15, 49, 83, 0.15)';
+                    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+                    ctx.shadowBlur = 10;
+                    ctx.fillText('🔍 spycode', 0, 0);
+                    ctx.restore();
 
-const mottakaInput=document.getElementById("mottaka");
-const motkhorochInput=document.getElementById("motkhoroch");
-const motmilInput=document.getElementById("motmil");
+                    const link = document.createElement('a');
+                    link.download = `মিল_ক্যালকুলেটর_${new Date().toISOString().slice(0,10)}.png`;
+                    link.href = canvas.toDataURL('image/png', 1.0);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    status.textContent = '✅ PNG সফলভাবে ডাউনলোড হয়েছে!';
+                    status.classList.remove('loading');
+                    status.style.background = 'linear-gradient(45deg, #d4edda, #c3e6cb)';
+                    
+                    setTimeout(() => {
+                        status.textContent = '';
+                        status.style.background = '';
+                    }, 4000);
+                } catch (err) {
+                    status.textContent = '❌ ডাউনলোড ব্যর্থ! আবার চেষ্টা করুন';
+                    status.classList.remove('loading');
+                    status.style.background = 'linear-gradient(45deg, #f8d7da, #f5c6cb)';
+                    console.error('PNG Error:', err);
+                }
+            };
 
-mottakaInput.oninput=update;
-motkhorochInput.oninput=update;
-motmilInput.oninput=update;
+            function showStatus(message, type = 'info') {
+                const status = document.getElementById('statusMsg');
+                if (status) {
+                    status.textContent = message;
+                    status.style.background = type === 'success' ? 
+                        'linear-gradient(45deg, #d3f0da, #c8e6c9)' : 
+                        'linear-gradient(45deg, #f8d7da, #f5c6cb)';
+                    setTimeout(() => {
+                        status.textContent = '';
+                        status.style.background = '';
+                    }, 3000);
+                }
+            }
 
-update();
+            // ইনিশিয়াল রেন্ডার
+            renderApp();
 
-</script>
+            // রিসাইজ হ্যান্ডলার
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(renderApp, 300);
+            });
 
+        })();
+    </script>
 </body>
 </html>
