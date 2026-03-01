@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>মাল্টি‑মেম্বার মিল ক্যালকুলেটর 🏠</title>
+    <title>মাল্টি‑মেম্বার মিল ক্যালকুলেটর 📸 PNG সহ</title>
+    <!-- html2canvas লাইব্রেরি (PNG ডাউনলোডের জন্য) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -13,7 +15,7 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(145deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(145deg, #0a3147 0%, #1b4f8b 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -24,7 +26,6 @@
             color: #f0f4fa;
         }
 
-        /* about me button */
         .about-me-button {
             position: absolute;
             top: 20px;
@@ -39,7 +40,7 @@
             box-shadow: 0 6px 14px rgba(0,0,0,0.2);
             transition: all 0.2s ease;
             border: 2px solid #ffe6b0;
-            z-index: 10;
+            z-index: 100;
         }
         .about-me-button:hover {
             background-color: #ffa01e;
@@ -47,37 +48,34 @@
             box-shadow: 0 10px 18px rgba(0,0,0,0.3);
         }
 
-        /* main card */
         .container {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(4px);
             border-radius: 36px;
             box-shadow: 0 30px 50px rgba(0, 0, 0, 0.4);
             padding: 35px 30px;
-            max-width: 1200px;
+            max-width: 1300px;
             width: 100%;
             margin-top: 15px;
-            transition: 0.3s;
             border: 2px solid rgba(255,255,240,0.3);
         }
 
         h1 {
-            color: #13294b;
+            color: #0a2a44;
             font-size: 2.4rem;
             text-align: center;
             margin-bottom: 15px;
             font-weight: 700;
-            letter-spacing: 1px;
             border-bottom: 3px dashed #2a5298;
             padding-bottom: 15px;
         }
 
-        /*  Master form (বাসার মোট ইনপুট) */
+        /* master form */
         .master-grid {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
-            background: #eef5ff;
+            background: #e2edff;
             padding: 25px 20px;
             border-radius: 28px;
             margin-bottom: 30px;
@@ -111,9 +109,9 @@
             box-shadow: 0 0 0 3px rgba(42,106,219,0.2);
         }
 
-        /* মেম্বার অ্যাড করার কার্ড */
+        /* add member panel */
         .add-member-panel {
-            background: #d9e9ff;
+            background: #d0e4ff;
             border-radius: 28px;
             padding: 25px 20px;
             margin-bottom: 30px;
@@ -190,15 +188,21 @@
             box-shadow: 0 15px 20px rgba(0,0,0,0.2);
         }
 
-        /* মেম্বার তালিকা ট্যাগ */
+        /* member list + download button */
+        .member-list-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin: 30px 0 15px 0;
+        }
         .member-list-title {
             font-size: 1.8rem;
             color: #13294b;
-            margin: 40px 0 15px 0;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
         .member-list-title button {
             background: #dc3545;
@@ -209,7 +213,6 @@
             font-weight: bold;
             cursor: pointer;
             font-size: 0.9rem;
-            margin-left: 15px;
             transition: 0.2s;
         }
         .member-list-title button:hover {
@@ -217,14 +220,37 @@
             transform: scale(1.02);
         }
 
-        /* টেবিল স্টাইল */
+        .download-btn {
+            background: #2d6e46;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 14px 30px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 8px 14px rgba(0,60,30,0.4);
+            transition: 0.2s;
+            border: 2px solid #a0d8b0;
+            margin-bottom: 5px;
+        }
+        .download-btn:hover {
+            background: #1d5436;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 20px rgba(0,0,0,0.3);
+        }
+
+        /* table styles */
         .table-wrapper {
             overflow-x: auto;
             border-radius: 25px;
             background: #eef3fc;
             padding: 5px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            margin-bottom: 35px;
+            margin-bottom: 30px;
         }
         table {
             width: 100%;
@@ -247,9 +273,6 @@
             color: #131f33;
             font-weight: 500;
             text-align: center;
-        }
-        tr:last-child td {
-            border-bottom: none;
         }
         .action-cell {
             display: flex;
@@ -278,7 +301,7 @@
             background: #bd2130;
         }
 
-        /* সম্মিলিত ফলাফল টেবিল */
+        /* summary box */
         .summary-box {
             background: linear-gradient(115deg, #061f3a, #123a62);
             border-radius: 28px;
@@ -320,17 +343,24 @@
             color: #ffd966;
         }
 
-        /* ফাঁকা জায়গা */
-        .footnote {
-            margin-top: 20px;
-            color: #c3d9ff;
-            text-align: center;
-            font-size: 1.1rem;
+        /* ওয়াটারমার্কের জন্য pseudo ব্যবহার করবো না, বরং PNG তৈরির সময় ওয়াটারমার্ক যুক্ত হবে */
+        .watermark-tag {
+            display: none; /* শুধু ডামি, js এ ব্যবহৃত */
         }
 
-        @media (max-width: 800px) {
-            .container { padding: 20px; }
-            h1 { font-size: 2rem; }
+        .footnote {
+            margin-top: 20px;
+            color: #b9d0f0;
+            text-align: center;
+            font-size: 1rem;
+        }
+        #downloadStatus {
+            color: #13322b;
+            background: #e0ffe6;
+            padding: 8px 16px;
+            border-radius: 40px;
+            display: inline-block;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -338,10 +368,10 @@
 
     <a href="SAHED.html" class="about-me-button">📌 About Me (SAHED)</a>
 
-    <div class="container">
-        <h1>🍛 পরিবার মিল ক্যালকুলেটর (একাধিক সদস্য)</h1>
+    <div class="container" id="captureArea">  <!-- পুরো হিসাব এরিয়া, PNG ক্যাপচার হবে -->
+        <h1>🍛 পরিবার মিল ক্যালকুলেটর (PNG সহ)</h1>
 
-        <!-- স্থায়ী বাসার তথ্য (মোট টাকা, খরচ, মিল) -->
+        <!-- বাসার মোট তথ্য -->
         <div class="master-grid">
             <div class="master-item">
                 <label>💰 মোট টাকা (সংগ্রহ)</label>
@@ -357,11 +387,9 @@
             </div>
         </div>
 
-        <!-- নতুন মেম্বার অ্যাড করার প্যানেল -->
+        <!-- অ্যাড মেম্বার প্যানেল -->
         <div class="add-member-panel">
-            <div class="panel-title">
-                <span>➕</span> নতুন সদস্য যুক্ত করুন
-            </div>
+            <div class="panel-title"><span>➕</span> নতুন সদস্য যুক্ত করুন</div>
             <div class="member-inputs">
                 <div class="member-field">
                     <label>নাম</label>
@@ -383,12 +411,16 @@
             </div>
         </div>
 
-        <!-- সদস্য তালিকা ও টেবিল -->
-        <div class="member-list-title">
-            📋 সদস্য তালিকা 
-            <button onclick="clearAllMembers()">🗑️ সব মুছুন</button>
+        <!-- হেডার: সদস্য তালিকা + ডাউনলোড বাটন -->
+        <div class="member-list-header">
+            <div class="member-list-title">
+                📋 সদস্য তালিকা 
+                <button onclick="clearAllMembers()">🗑️ সব মুছুন</button>
+            </div>
+            <button class="download-btn" onclick="downloadPNG()">📥 ডাউনলোড হিস্টোরি (PNG)</button>
         </div>
 
+        <!-- মেম্বার টেবিল -->
         <div class="table-wrapper" id="memberTableContainer">
             <table id="memberTable">
                 <thead>
@@ -403,19 +435,15 @@
                         <th>অ্যাকশন</th>
                     </tr>
                 </thead>
-                <tbody id="memberTableBody">
-                    <!-- ডায়নামিক এখানে বসবে -->
-                </tbody>
+                <tbody id="memberTableBody"></tbody>
             </table>
         </div>
 
-        <!-- সম্মিলিত সারাংশ টেবিল -->
+        <!-- সমষ্টিগত সারাংশ টেবিল -->
         <div class="summary-box" id="summaryBox">
             <h2>📊 সমষ্টিগত হিসাব (সকল সদস্য)</h2>
             <table class="summary-table" id="summaryTable">
-                <thead>
-                    <tr><th>বিবরণ</th><th>মান</th></tr>
-                </thead>
+                <thead><tr><th>বিবরণ</th><th>মান</th></tr></thead>
                 <tbody id="summaryBody">
                     <tr><td>মিল রেট (প্রতি ইউনিট)</td><td id="rateShow">-</td></tr>
                     <tr><td>অবশিষ্ট টাকা (বাসা)</td><td id="oboshistoShow">-</td></tr>
@@ -427,184 +455,196 @@
             </table>
             <div class="footnote">👉 নেতিবাচক হলে ম্যানেজার পাবে, ধনাত্মক হলে ম্যানেজার দেবে (সদস্যদের প্রাপ্তির সমষ্টি)</div>
         </div>
+
+        <!-- ওয়াটারমার্ক টেক্সট (ক্যাপচারে দেখাবে, কিন্তু সাধারণত hidden নয় কারণ আমরা ক্যাপচারে চাই) 
+             আমরা PNG তে ওয়াটারমার্ক হিসেবে নিচের div টা রাখব, যা সবসময় দেখা যাবে -->
+        <div style="text-align: center; margin-top: 25px; color: #6f8db0; font-weight: 500; font-size: 1.1rem; border-top: 2px dashed #a3c1e0; padding-top: 18px;">
+            <span style="background: #082a44; color: #c4dcff; padding: 8px 25px; border-radius: 40px;">⚡ meal.sahed.com ⚡</span>
+        </div>
+        <!-- উপরের অংশটুকু ওয়াটারমার্ক হিসেবে কাজ করবে, PNG তে চলে আসবে -->
     </div>
 
+    <div style="margin-top: 15px;" id="downloadStatus"></div>
+
     <script>
-        // সকল সদস্য সংরক্ষণের অ্যারে
-        let members = [];
+        (function() {
+            // --- মেম্বার ডাটা ---
+            let members = [];
 
-        // DOM elements
-        const tbody = document.getElementById('memberTableBody');
-        const mottakaInp = document.getElementById('mottaka');
-        const motkhorochInp = document.getElementById('motkhoroch');
-        const motmilInp = document.getElementById('motmil');
+            // DOM elements
+            const tbody = document.getElementById('memberTableBody');
+            const mottakaInp = document.getElementById('mottaka');
+            const motkhorochInp = document.getElementById('motkhoroch');
+            const motmilInp = document.getElementById('motmil');
+            const nameInp = document.getElementById('memName');
+            const milInp = document.getElementById('memMil');
+            const extraInp = document.getElementById('memExtra');
+            const jomaInp = document.getElementById('memJoma');
 
-        // ইনপুট ফিল্ড (নতুন মেম্বার)
-        const nameInp = document.getElementById('memName');
-        const milInp = document.getElementById('memMil');
-        const extraInp = document.getElementById('memExtra');
-        const jomaInp = document.getElementById('memJoma');
-
-        // ফাংশন: মিল রেট ও অবশিষ্ট হিসাব করে
-        function getBaseCalculations() {
-            const mottaka = parseFloat(mottakaInp.value) || 0;
-            const motkhoroch = parseFloat(motkhorochInp.value) || 0;
-            const motmil = parseFloat(motmilInp.value) || 1; // zero এড়াতে 1 ধরা (চেক পরে)
-            const oboshisto = mottaka - motkhoroch;
-            const milret = motmil !== 0 ? motkhoroch / motmil : 0;
-            return { mottaka, motkhoroch, motmil, oboshisto, milret };
-        }
-
-        // রিফ্রেশ টেবিল ও সমষ্টি
-        function refreshAll() {
-            const base = getBaseCalculations();
-            const milret = base.milret;
-            const motmilTotal = base.motmil;
-
-            // মেম্বারদের জন্য হিসাব তৈরি ও টেবিল রো জেনারেট
-            let htmlRows = '';
-            let totalJoma = 0;
-            let totalEx = 0; // সকল সদস্যের (মিল খরচ + অতিরিক্ত)
-            let totalMilNeeded = 0; // মোট মিলের যোগ (ভ্যালিডেশন)
-
-            members.forEach((mem, index) => {
-                const mil = parseFloat(mem.mil) || 0;
-                const extra = parseFloat(mem.extra) || 0;
-                const joma = parseFloat(mem.joma) || 0;
-                totalMilNeeded += mil;
-
-                // মিল খরচ = milret * member_mil
-                const milKhoroch = milret * mil;
-                const totalMemberCost = milKhoroch + extra;   // একজনের মোট খরচ (মিল খরচ + অতিরিক্ত)
-                const difference = joma - totalMemberCost;    // পাবে/দেবে (ধনাত্মক হলে সদস্য পাবে, মানেেজার দেবে)
-
-                totalJoma += joma;
-                totalEx += totalMemberCost;
-
-                // কোন দিক নির্দেশনা (শুধু প্রদর্শন)
-                let signText = '';
-                if (difference > 0) signText = `${mem.name} পাবে ${difference.toFixed(2)} টাকা`;
-                else if (difference < 0) signText = `ম্যানেজার পাবে ${Math.abs(difference).toFixed(2)} টাকা`;
-                else signText = `সমান ০`;
-
-                htmlRows += `<tr>
-                    <td>${mem.name || 'নামহীন'}</td>
-                    <td>${mil.toFixed(2)}</td>
-                    <td>${extra.toFixed(2)}</td>
-                    <td>${joma.toFixed(2)}</td>
-                    <td>${milKhoroch.toFixed(2)}</td>
-                    <td>${totalMemberCost.toFixed(2)}</td>
-                    <td>${signText}</td>
-                    <td class="action-cell">
-                        <button class="edit-btn" onclick="editMember(${index})">সম্পাদনা</button>
-                        <button class="remove-btn" onclick="removeMember(${index})">মুছুন</button>
-                    </td>
-                </tr>`;
-            });
-
-            tbody.innerHTML = htmlRows || `<tr><td colspan="8" style="padding:30px; text-align:center;">👥 কোনো সদস্য নেই। নতুন সদস্য যোগ করুন।</td></tr>`;
-
-            // আপডেট সারাংশ টেবিল
-            document.getElementById('rateShow').innerText = milret.toFixed(2);
-            document.getElementById('oboshistoShow').innerText = base.oboshisto.toFixed(2);
-            document.getElementById('totalMembersShow').innerText = members.length;
-            document.getElementById('totalJomaShow').innerText = totalJoma.toFixed(2);
-            document.getElementById('totalExShow').innerText = totalEx.toFixed(2);
-
-            // ম্যানেজার ব্যালেন্স = মোট জমা - মোট খরচ (ex) 
-            // কিন্তু এটাই সকল সদস্যের difference এর সমষ্টি।
-            const managerBalance = totalJoma - totalEx;
-            document.getElementById('managerBalanceShow').innerText = managerBalance.toFixed(2) + ' টাকা';
-        }
-
-        // নতুন সদস্য যোগ
-        function addMember() {
-            const name = nameInp.value.trim() || 'অতিথি';
-            const mil = parseFloat(milInp.value);
-            const extra = parseFloat(extraInp.value);
-            const joma = parseFloat(jomaInp.value);
-
-            if (isNaN(mil) || mil < 0 || isNaN(extra) || extra < 0 || isNaN(joma) || joma < 0) {
-                alert('দয়া করে সদস্যের মিল, অতিরিক্ত খরচ ও জমা সঠিক সংখ্যা দিন (ঋণাত্মক নয়)');
-                return;
+            // হেল্পার: বেস ক্যালকুলেশন
+            function getBaseCalculations() {
+                const mottaka = parseFloat(mottakaInp.value) || 0;
+                const motkhoroch = parseFloat(motkhorochInp.value) || 0;
+                const motmil = parseFloat(motmilInp.value) || 1; 
+                const oboshisto = mottaka - motkhoroch;
+                const milret = motmil !== 0 ? motkhoroch / motmil : 0;
+                return { mottaka, motkhoroch, motmil, oboshisto, milret };
             }
 
-            // মোট মিলের সাথে সমন্বয়? আমরা বাধ্য করছি না, তবে সতর্ক দিতে পারি।
-            const base = getBaseCalculations();
-            if (base.motmil <= 0) {
-                alert('বাসার "মোট মিল" শূন্য বা ঋণাত্মক হতে পারে না। সঠিক মান দিন।');
-                return;
-            }
+            // রিফ্রেশ টেবিল ও সমষ্টি
+            window.refreshAll = function() {
+                const base = getBaseCalculations();
+                const milret = base.milret;
 
-            members.push({
-                name: name,
-                mil: mil,
-                extra: extra,
-                joma: joma
-            });
+                let htmlRows = '';
+                let totalJoma = 0;
+                let totalEx = 0;
 
-            // ইনপুট ফাঁকা করা (ঐচ্ছিক)
-            nameInp.value = '';
-            milInp.value = '';
-            extraInp.value = '';
-            jomaInp.value = '';
+                members.forEach((mem, index) => {
+                    const mil = parseFloat(mem.mil) || 0;
+                    const extra = parseFloat(mem.extra) || 0;
+                    const joma = parseFloat(mem.joma) || 0;
 
-            refreshAll();
-        }
+                    const milKhoroch = milret * mil;
+                    const totalMemberCost = milKhoroch + extra;
+                    const diff = joma - totalMemberCost;
 
-        // সদস্য মুছুন
-        function removeMember(index) {
-            if (index >= 0 && index < members.length) {
-                members.splice(index, 1);
+                    totalJoma += joma;
+                    totalEx += totalMemberCost;
+
+                    let signText = '';
+                    if (diff > 0) signText = `${mem.name} পাবে ${diff.toFixed(2)} টাকা`;
+                    else if (diff < 0) signText = `ম্যানেজার পাবে ${Math.abs(diff).toFixed(2)} টাকা`;
+                    else signText = `সমান ০`;
+
+                    htmlRows += `<tr>
+                        <td>${mem.name || 'নামহীন'}</td>
+                        <td>${mil.toFixed(2)}</td>
+                        <td>${extra.toFixed(2)}</td>
+                        <td>${joma.toFixed(2)}</td>
+                        <td>${milKhoroch.toFixed(2)}</td>
+                        <td>${totalMemberCost.toFixed(2)}</td>
+                        <td>${signText}</td>
+                        <td class="action-cell">
+                            <button class="edit-btn" onclick="editMember(${index})">সম্পাদনা</button>
+                            <button class="remove-btn" onclick="removeMember(${index})">মুছুন</button>
+                        </td>
+                    </tr>`;
+                });
+
+                tbody.innerHTML = htmlRows || `<tr><td colspan="8" style="padding:30px; text-align:center;">👥 কোনো সদস্য নেই। নতুন সদস্য যোগ করুন।</td></tr>`;
+
+                // সারাংশ আপডেট
+                document.getElementById('rateShow').innerText = milret.toFixed(2);
+                document.getElementById('oboshistoShow').innerText = base.oboshisto.toFixed(2);
+                document.getElementById('totalMembersShow').innerText = members.length;
+                document.getElementById('totalJomaShow').innerText = totalJoma.toFixed(2);
+                document.getElementById('totalExShow').innerText = totalEx.toFixed(2);
+                const managerBalance = totalJoma - totalEx;
+                document.getElementById('managerBalanceShow').innerText = managerBalance.toFixed(2) + ' টাকা';
+            };
+
+            // অ্যাড মেম্বার
+            window.addMember = function() {
+                const name = nameInp.value.trim() || 'অতিথি';
+                const mil = parseFloat(milInp.value);
+                const extra = parseFloat(extraInp.value);
+                const joma = parseFloat(jomaInp.value);
+
+                if (isNaN(mil) || mil < 0 || isNaN(extra) || extra < 0 || isNaN(joma) || joma < 0) {
+                    alert('দয়া করে সদস্যের মিল, অতিরিক্ত খরচ ও জমা সঠিক সংখ্যা দিন (ঋণাত্মক নয়)');
+                    return;
+                }
+                const base = getBaseCalculations();
+                if (base.motmil <= 0) {
+                    alert('বাসার "মোট মিল" শূন্য বা ঋণাত্মক হতে পারে না। সঠিক মান দিন।');
+                    return;
+                }
+
+                members.push({ name, mil, extra, joma });
+                nameInp.value = ''; milInp.value = ''; extraInp.value = ''; jomaInp.value = '';
                 refreshAll();
-            }
-        }
+            };
 
-        // সব সদস্য মুছুন
-        function clearAllMembers() {
-            if (members.length > 0 && confirm('সমস্ত সদস্য মুছে ফেলতে চান?')) {
-                members = [];
-                refreshAll();
-            }
-        }
+            window.removeMember = function(index) {
+                if (index >= 0 && index < members.length) {
+                    members.splice(index, 1);
+                    refreshAll();
+                }
+            };
 
-        // এডিট ফাংশন (পপুলেট করে এডিট)
-        function editMember(index) {
-            const mem = members[index];
-            if (!mem) return;
-            nameInp.value = mem.name || '';
-            milInp.value = mem.mil;
-            extraInp.value = mem.extra;
-            jomaInp.value = mem.joma;
-            // ঐ সদস্যকে সরিয়ে আবার অ্যাড করবেন (সুবিধা)
-            if (confirm('এই সদস্যের তথ্য সম্পাদনা করবেন? ওকে তালিকা থেকে সরিয়ে আবার যুক্ত করুন')) {
-                members.splice(index, 1);
-                refreshAll();
-            } else {
-                // ক্যানসেল করলে ইনপুট ফাঁকা না করাই ভালো, তবে কিছু করছি না
-            }
-        }
+            window.clearAllMembers = function() {
+                if (members.length > 0 && confirm('সমস্ত সদস্য মুছে ফেলতে চান?')) {
+                    members = [];
+                    refreshAll();
+                }
+            };
 
-        // যুক্ত সুবিধা: মোট ইনপুট গুলো পরিবর্তন করলেও হিসাব নবায়ন হবে (optional)
-        mottakaInp.addEventListener('input', refreshAll);
-        motkhorochInp.addEventListener('input', refreshAll);
-        motmilInp.addEventListener('input', refreshAll);
+            window.editMember = function(index) {
+                const mem = members[index];
+                if (!mem) return;
+                nameInp.value = mem.name || '';
+                milInp.value = mem.mil;
+                extraInp.value = mem.extra;
+                jomaInp.value = mem.joma;
+                if (confirm('এই সদস্যকে সম্পাদনা করতে সরিয়ে আবার যুক্ত করুন?')) {
+                    members.splice(index, 1);
+                    refreshAll();
+                }
+            };
 
-        // পূর্বরূপে কিছু ডেমো ডাটা (যাতে টেবিল খালি না দেখায়)
-        (function initializeDemo() {
-            // শুধু একবার ডেমো এন্ট্রি
+            // ইনপুট চেঞ্জে রিফ্রেশ
+            mottakaInp.addEventListener('input', refreshAll);
+            motkhorochInp.addEventListener('input', refreshAll);
+            motmilInp.addEventListener('input', refreshAll);
+
+            // ডেমো ডাটা
             if (members.length === 0) {
                 members.push({ name: 'রাজু', mil: 50, extra: 100, joma: 2800 });
                 members.push({ name: 'সুমি', mil: 42, extra: 0, joma: 2100 });
                 members.push({ name: 'হাসান', mil: 38, extra: 250, joma: 2200 });
                 refreshAll();
             }
+
+            // PNG ডাউনলোড ফাংশন (ওয়াটারমার্ক সহ)
+            window.downloadPNG = function() {
+                const element = document.getElementById('captureArea');
+                const statusDiv = document.getElementById('downloadStatus');
+                statusDiv.innerText = '⏳ PNG তৈরি হচ্ছে...';
+                
+                // html2canvas ব্যবহার করে ছবি বানানো
+                html2canvas(element, {
+                    scale: 1.8,              // ভালো কোয়ালিটি
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    allowTaint: false,
+                    useCORS: true
+                }).then((canvas) => {
+                    // ওয়াটারমার্ক ক্যানভাসের উপর আঁকার দরকার নেই, কারণ আমরা ওয়াটারমার্ক ডিভি DOM এ রেখেছি (ওয়াটারমার্ক টেক্সট)
+                    // তবে অতিরিক্ত স্বচ্ছ ওয়াটারমার্ক লেয়ার চাইলে ক্যানভাসে আঁকতে পারি। কিন্তু DOM এর মধ্যেই ওয়াটারমার্ক আছে।
+                    // আমরা আরেকটু জোরালো ওয়াটারমার্ক অ্যাড করি (যাতে সহজে রিমুভ না হয়) ক্যানভাসের উপর ছোট টেক্সট 
+                    const ctx = canvas.getContext('2d');
+                    ctx.font = 'bold 20px Arial';
+                    ctx.fillStyle = 'rgba(100, 100, 100, 0.25)'; // হালকা ধূসর স্বচ্ছ
+                    ctx.rotate(-0.2);
+                    ctx.fillText('meal.sahed.com', 200, canvas.height - 50);
+                    ctx.rotate(0.2); // rotate back (optional)
+                    
+                    // ডাউনলোড
+                    const link = document.createElement('a');
+                    link.download = 'meal_calculator_history.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    
+                    statusDiv.innerText = '✅ PNG ডাউনলোড সম্পন্ন! (ওয়াটারমার্ক সংযুক্ত)';
+                    setTimeout(() => statusDiv.innerText = '', 3000);
+                }).catch(error => {
+                    console.error(error);
+                    statusDiv.innerText = '❌ ডাউনলোড ব্যর্থ, কনসোল দেখুন';
+                });
+            };
+
         })();
-
-        // ক্যালকুলেট বাটন আগে ছিল, এখন আর দরকার নেই। তবে রিফ্রেশ শুরুতে হয়েছে।
-        // পুরনো calculateAll() সরিয়ে দেওয়া হলো। এখন live update।
-
     </script>
-    <!-- নিচে একটি ছোট নোট:  পাবে/দেবে বুঝতে: সদস্য যদি (জমা - খরচ) >0 হয়, সদস্য পাবে, ম্যানেজার দেবে। তারল্য সবশেষে ম্যানেজার ব্যালেন্স = সমষ্টি (জমা - খরচ)। -->
 </body>
 </html>
