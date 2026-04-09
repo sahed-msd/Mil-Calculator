@@ -1,641 +1,646 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>🍚 মিল ক্যালকুলেটর | spycode</title>
-    
-    <!-- Bootstrap 5 Framework Integration -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- html2canvas for PNG download -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Meal Manager Pro | Real-time Meal Cost Calculator</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'Hind Siliguri', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+        }
+
+        /* Dark / Light Mode Variables */
+        :root {
+            --bg-page: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --success: #10b981;
+            --success-light: #d1fae5;
+            --warning-light: #fef3c7;
+            --positive: #16a34a;
+            --negative: #dc2626;
+            --table-header: #f8fafc;
+            --input-bg: #ffffff;
+            --info-bg: #eef2ff;
+        }
+
+        body.dark {
+            --bg-page: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --border-light: #334155;
+            --table-header: #334155;
+            --input-bg: #0f172a;
+            --shadow-sm: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            --accent: #60a5fa;
+            --accent-hover: #3b82f6;
+            --info-bg: #1e293b;
         }
 
         body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0b263b 0%, #1a4a7a 100%);
-            padding: 10px;
+            background: var(--bg-page);
+            color: var(--text-primary);
+            padding: 1.5rem;
+            transition: background 0.3s ease, color 0.2s ease;
         }
 
-        /* Main Container - Fully Responsive */
-        .app-container {
-            max-width: 1400px;
-            margin: 15px auto;
-            background: rgba(255, 255, 255, 0.97);
-            border-radius: 40px;
-            padding: 30px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.5);
+        .dashboard-container {
+            max-width: 1440px;
+            margin: 0 auto;
         }
 
-        /* Mobile Specific Adjustments */
-        @media (max-width: 576px) {
-            .app-container {
-                padding: 15px;
-                border-radius: 25px;
-                margin: 8px;
-            }
-            
-            h1 {
-                font-size: 1.8rem !important;
-            }
-            
-            .display-6 {
-                font-size: 1.3rem !important;
-            }
-            
-            .btn {
-                padding: 12px 16px !important;
-                font-size: 1rem !important;
-            }
-            
-            .table th, .table td {
-                font-size: 0.85rem;
-                padding: 10px 5px;
-                white-space: nowrap;
-            }
-            
-            .summary-card {
-                padding: 15px !important;
-            }
+        /* header & toolbar */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
         }
 
-        /* Tablet Adjustments */
-        @media (min-width: 577px) and (max-width: 768px) {
-            .app-container {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 2.2rem !important;
-            }
-        }
-
-        /* Custom Card Styles */
-        .custom-card {
-            background: linear-gradient(145deg, #ffffff, #f0f8ff);
-            border-radius: 25px;
-            padding: 20px;
-            border: 2px solid #d7e5ff;
-            box-shadow: 0 8px 20px rgba(0, 20, 40, 0.1);
-            height: 100%;
-        }
-
-        .input-field label {
-            font-weight: 700;
-            color: #103f6b;
-            margin-bottom: 8px;
-            font-size: 1rem;
-        }
-
-        .input-field input {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #b0caf5;
-            border-radius: 50px;
-            font-size: 1.1rem;
+        h1 {
+            font-size: 1.8rem;
             font-weight: 600;
-            transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
         }
 
-        .input-field input:focus {
-            border-color: #1a5cb0;
-            box-shadow: 0 0 0 4px rgba(26,92,176,0.2);
-            outline: none;
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
         }
 
-        .member-form {
-            background: linear-gradient(145deg, #dcebff, #c3dfff);
-            border-radius: 25px;
-            padding: 20px;
-            margin: 20px 0;
+        button {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        button i { font-style: normal; font-weight: 600; }
+
+        .btn-primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
+        .btn-danger { background: var(--danger); border-color: var(--danger); color: white; }
+        .btn-danger:hover { background: var(--danger-hover); }
+        .btn-secondary { background: var(--card-bg); }
+        .btn-secondary:hover { background: var(--border-light); transform: translateY(-1px); }
+
+        /* summary cards grid - now 5 cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2rem;
         }
 
         .summary-card {
-            background: linear-gradient(115deg, #082b4a, #1b4e7a, #2a69a0);
-            border-radius: 25px;
-            padding: 25px;
-            color: white;
+            background: var(--card-bg);
+            border-radius: 1.5rem;
+            padding: 1.2rem 1rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            transition: all 0.2s;
+        }
+        .summary-card h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .summary-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .remaining-card .summary-value {
+            color: #8b5cf6;
         }
 
-        .summary-item {
+        /* market expense input row */
+        .expense-panel {
+            background: var(--card-bg);
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 2rem;
             display: flex;
-            justify-content: space-between;
-            padding: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1.5rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+        .expense-panel label {
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .expense-panel input {
+            background: var(--input-bg);
+            border: 1px solid var(--border-light);
+            padding: 0.6rem 1rem;
+            border-radius: 2rem;
+            font-size: 1rem;
+            width: 180px;
+            color: var(--text-primary);
         }
 
-        .summary-item.total {
-            background: rgba(0,0,0,0.3);
-            border-radius: 15px;
-            font-size: 1.3rem;
-            font-weight: 800;
-            margin-top: 10px;
-            border: none;
+        /* users table */
+        .users-section {
+            background: var(--card-bg);
+            border-radius: 1.5rem;
+            overflow-x: auto;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            transition: all 0.2s;
         }
 
-        .watermark {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 3px dashed #5577a5;
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
         }
 
-        .watermark span {
-            background: linear-gradient(45deg, #0f3153, #1a4a7a);
-            color: #dde9ff;
-            padding: 10px 40px;
-            border-radius: 50px;
-            font-size: 1.3rem;
-            font-weight: 800;
+        .users-table th {
+            text-align: left;
+            padding: 1rem 1rem;
+            background: var(--table-header);
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .users-table td {
+            padding: 1rem 1rem;
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: middle;
+        }
+
+        .user-input {
+            background: var(--input-bg);
+            border: 1px solid var(--border-light);
+            padding: 0.5rem 0.8rem;
+            border-radius: 0.75rem;
+            width: 100%;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            transition: 0.1s;
+        }
+        .user-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+        }
+
+        .balance-positive {
+            color: var(--positive);
+            font-weight: 700;
+            background: var(--success-light);
             display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
         }
-
-        /* Table Responsive */
-        .table-responsive {
-            border-radius: 20px;
-            overflow: hidden;
-            border: 2px solid #c7dfff;
-            background: white;
-        }
-
-        .table {
-            margin-bottom: 0;
-        }
-
-        .table th {
-            background: linear-gradient(45deg, #0e3b70, #1a5cb0);
-            color: white;
+        .balance-negative {
+            color: var(--negative);
             font-weight: 700;
-            white-space: nowrap;
+            background: #fee2e2;
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+        }
+        body.dark .balance-positive { background: #14532d; color: #86efac; }
+        body.dark .balance-negative { background: #7f1a1a; color: #fca5a5; }
+
+        .remove-user {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--danger);
+            padding: 0.2rem 0.6rem;
+            border-radius: 2rem;
+            transition: 0.1s;
+        }
+        .remove-user:hover {
+            background: rgba(239,68,68,0.2);
+            transform: scale(1.05);
         }
 
-        .btn-action {
-            border-radius: 50px;
-            padding: 8px 16px;
-            font-weight: 600;
-            margin: 2px;
+        .add-user-row {
+            padding: 1rem;
+            text-align: center;
+            background: var(--card-bg);
         }
 
-        /* Android WebView Optimization */
-        @supports (-webkit-overflow-scrolling: touch) {
-            .app-container {
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            input, button {
-                -webkit-appearance: none;
-                border-radius: 50px;
-            }
-        }
-
-        /* Loading Animation */
-        .loading {
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        /* Custom Button Styles */
-        .btn-gradient {
-            background: linear-gradient(45deg, #134579, #1a5cb0);
+        .btn-add-user {
+            background: var(--accent);
             color: white;
             border: none;
-            font-weight: 700;
-            transition: all 0.3s ease;
+            padding: 0.6rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 500;
         }
 
-        .btn-gradient:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(19,69,121,0.4);
-            color: white;
+        /* responsive */
+        @media (max-width: 640px) {
+            body { padding: 1rem; }
+            .summary-value { font-size: 1.5rem; }
+            .users-table th, .users-table td { padding: 0.75rem 0.5rem; }
         }
-
-        .btn-success-gradient {
-            background: linear-gradient(45deg, #1d6e41, #28a745);
-            color: white;
-            font-weight: 700;
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
         }
-
-        .btn-danger-gradient {
-            background: linear-gradient(45deg, #c93e4e, #d9546a);
-            color: white;
-            font-weight: 700;
+        .dark-toggle {
+            background: var(--card-bg);
+            border-radius: 2rem;
+            padding: 0.4rem 1rem;
         }
-
-        /* Grid System Override for Better Responsiveness */
-        .row {
-            margin: -10px;
-        }
-        
-        .col-12, .col-md-6, .col-lg-4 {
-            padding: 10px;
+        @media print {
+            body { background: white; color: black; }
+            .toolbar button, .add-user-row, .remove-user, #addUserBtn, .btn-add-user, .action-buttons, .expense-panel input, .user-input { background: white !important; color: black !important; border: 1px solid #ccc; }
+            .balance-positive { background: #d1fae5; color: #065f46; }
+            .balance-negative { background: #fee2e2; color: #991b1b; }
+            .users-table { border-collapse: collapse; width: 100%; }
+            .users-table th, .users-table td { border: 1px solid #ccc; }
+            .dark-toggle, #exportPDFBtn, #resetAllBtn, #darkModeToggleBtn { display: none; }
+            .btn-add-user { display: none; }
+            .summary-card { box-shadow: none; border: 1px solid #aaa; }
         }
     </style>
 </head>
 <body>
-    <div class="app-container" id="appContainer">
-        <!-- Header Section - Fully Responsive with Bootstrap Grid -->
-        <div class="row align-items-center mb-4">
-            <div class="col-8 col-md-6">
-                <h1 class="display-4 fw-bold" style="background: linear-gradient(45deg, #0c3253, #1a5cb0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-                    <i class="fas fa-utensils me-2"></i>মিল ক্যালক
-                </h1>
-            </div>
-            <div class="col-4 col-md-6 text-end">
-                <a href="SAHED.html" class="btn btn-warning btn-lg rounded-pill px-4 py-3 fw-bold shadow" target="_blank">
-                    <i class="fas fa-user me-2"></i><span class="d-none d-sm-inline">SAHED</span><span class="d-sm-none">📌</span>
-                </a>
-            </div>
-        </div>
-
-        <!-- Input Cards - Responsive Grid -->
-        <div class="row">
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="custom-card">
-                    <div class="input-field">
-                        <label><i class="fas fa-coins me-2 text-warning"></i>মোট টাকা</label>
-                        <input type="number" id="mottaka" class="form-control form-control-lg rounded-pill" value="25000" min="0">
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="custom-card">
-                    <div class="input-field">
-                        <label><i class="fas fa-receipt me-2 text-danger"></i>মোট খরচ</label>
-                        <input type="number" id="motkhoroch" class="form-control form-control-lg rounded-pill" value="18000" min="0">
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="custom-card">
-                    <div class="input-field">
-                        <label><i class="fas fa-bowl-food me-2 text-success"></i>মোট মিল</label>
-                        <input type="number" id="motmil" class="form-control form-control-lg rounded-pill" value="360" min="1">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Member Section -->
-        <div class="member-form mt-4">
-            <h3 class="fw-bold mb-3" style="color: #103b66;">
-                <i class="fas fa-user-plus me-2"></i>নতুন সদস্য যোগ করুন
-            </h3>
-            <div class="row g-3">
-                <div class="col-12 col-sm-6 col-md-3">
-                    <label class="fw-bold mb-1">👤 নাম</label>
-                    <input type="text" id="memName" class="form-control rounded-pill" placeholder="রাজু">
-                </div>
-                <div class="col-12 col-sm-6 col-md-2">
-                    <label class="fw-bold mb-1">🍚 মিল</label>
-                    <input type="number" id="memMil" class="form-control rounded-pill" placeholder="45" min="0">
-                </div>
-                <div class="col-12 col-sm-6 col-md-2">
-                    <label class="fw-bold mb-1">💸 অতিরিক্ত</label>
-                    <input type="number" id="memExtra" class="form-control rounded-pill" placeholder="200" min="0">
-                </div>
-                <div class="col-12 col-sm-6 col-md-2">
-                    <label class="fw-bold mb-1">💰 জমা</label>
-                    <input type="number" id="memJoma" class="form-control rounded-pill" placeholder="3500" min="0">
-                </div>
-                <div class="col-12 col-md-3 d-flex align-items-end">
-                    <button class="btn btn-gradient w-100 py-3 rounded-pill fw-bold" onclick="addMember()">
-                        <i class="fas fa-check-circle me-2"></i>যোগ করুন
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Control Bar -->
-        <div class="row align-items-center my-4">
-            <div class="col-12 col-md-6 mb-3 mb-md-0">
-                <div class="d-flex align-items-center gap-3">
-                    <h2 class="fw-bold m-0" style="color: #102f50;">
-                        <i class="fas fa-list me-2"></i>সদস্য তালিকা
-                    </h2>
-                    <button class="btn btn-danger-gradient rounded-pill px-4 py-2" onclick="clearAllMembers()">
-                        <i class="fas fa-trash-alt me-2"></i>সব মুছুন
-                    </button>
-                </div>
-            </div>
-            <div class="col-12 col-md-6 text-md-end">
-                <button class="btn btn-success-gradient rounded-pill px-5 py-3 w-100 w-md-auto" onclick="downloadPNG()">
-                    <i class="fas fa-download me-2"></i>PNG ডাউনলোড
-                </button>
-            </div>
-        </div>
-
-        <!-- Output Area -->
-        <div id="outputArea" class="mb-4"></div>
-        
-        <!-- Status Message -->
-        <div id="statusMsg" class="alert d-none"></div>
-
-        <!-- Admin Panel -->
-        <div class="custom-card mt-4">
-            <h3 class="fw-bold mb-3" style="color: #10375e;">
-                <i class="fas fa-cog me-2"></i>এডিট / রিমুভ সদস্য
-            </h3>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead>
-                        <tr>
-                            <th>নাম</th>
-                            <th>মিল</th>
-                            <th>অতিরিক্ত</th>
-                            <th>জমা</th>
-                            <th>অ্যাকশন</th>
-                        </tr>
-                    </thead>
-                    <tbody id="adminBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Watermark -->
-        <div class="watermark">
-            <span><i class="fas fa-code me-2"></i>spycode</span>
+<div class="dashboard-container">
+    <div class="toolbar">
+        <h1>🍽️ Meal Manager Pro</h1>
+        <div class="action-buttons">
+            <button id="darkModeToggleBtn" class="btn-secondary">🌓 Dark Mode</button>
+            <button id="resetAllBtn" class="btn-danger">⟳ Reset All Data</button>
+            <button id="exportPDFBtn" class="btn-secondary">📄 Export PDF</button>
         </div>
     </div>
 
-    <script>
-        (function() {
-            // Data Storage
-            let members = JSON.parse(localStorage.getItem('mealMembers')) || [
-                { name: 'রাজু', mil: 50, extra: 100, joma: 2800 },
-                { name: 'সুমি', mil: 42, extra: 0, joma: 2100 },
-                { name: 'হাসান', mil: 38, extra: 250, joma: 2200 }
+    <!-- Summary Cards: Added "Remaining Balance (Deposit - Expense)" -->
+    <div class="summary-grid" id="summaryGrid">
+        <div class="summary-card"><h3>🍴 Total Meals</h3><div class="summary-value" id="totalMealsVal">0</div></div>
+        <div class="summary-card"><h3>💰 Total Deposit</h3><div class="summary-value" id="totalDepositVal">0</div></div>
+        <div class="summary-card"><h3>🛒 Market Expense</h3><div class="summary-value" id="totalExpenseVal">0</div></div>
+        <div class="summary-card remaining-card"><h3>📊 Remaining (Deposit - Expense)</h3><div class="summary-value" id="remainingBalanceVal">0</div></div>
+        <div class="summary-card"><h3>⚖️ Cost Per Meal</h3><div class="summary-value" id="costPerMealVal">0.00</div></div>
+    </div>
+
+    <!-- Market Expense Input -->
+    <div class="expense-panel">
+        <label>🏬 Total Market Expense (BDT)</label>
+        <input type="number" id="marketExpenseInput" value="0" step="any" placeholder="Enter total bazar cost">
+        <span style="font-size: 0.8rem; color: var(--text-secondary);">Real‑time calculation</span>
+    </div>
+
+    <!-- Users Dynamic Table -->
+    <div class="users-section">
+        <table class="users-table" id="usersTable">
+            <thead>
+                <tr><th>User Name</th><th>Deposit (BDT)</th><th>Meals Count</th><th>Meal Cost</th><th>Balance</th><th style="width: 50px"></th></tr>
+            </thead>
+            <tbody id="usersTableBody">
+                <!-- dynamic rows injected -->
+            </tbody>
+            <tfoot class="add-user-row">
+                <tr><td colspan="6"><button id="addUserBtn" class="btn-add-user">+ Add New User</button></td></tr>
+            </tfoot>
+        </table>
+    </div>
+    <footer>✔ Real-time | Positive Balance = Get Money | Negative = Give Money | Remaining = Total Deposit - Total Expense</footer>
+</div>
+
+<script>
+    // ---------- DATA MODEL ----------
+    let users = [];         // each user: { id, name, deposit, meals }
+    let totalMarketExpense = 0;
+
+    // Helper: unique id
+    function generateId() {
+        return Date.now() + '-' + Math.random().toString(36).substr(2, 8);
+    }
+
+    // Load from localStorage
+    function loadFromLocalStorage() {
+        const savedUsers = localStorage.getItem('mealManager_users');
+        const savedExpense = localStorage.getItem('mealManager_expense');
+        if(savedUsers) {
+            try {
+                users = JSON.parse(savedUsers);
+                users.forEach(u => { if(!u.id) u.id = generateId(); });
+            } catch(e) { users = []; }
+        }
+        if(savedExpense !== null) totalMarketExpense = parseFloat(savedExpense) || 0;
+        else totalMarketExpense = 0;
+
+        // default demo users if empty
+        if(users.length === 0) {
+            users = [
+                { id: generateId(), name: "Rafiq", deposit: 2500, meals: 12 },
+                { id: generateId(), name: "Shabana", deposit: 1800, meals: 8 },
+                { id: generateId(), name: "Jabbar", deposit: 3200, meals: 15 }
             ];
+        }
+    }
 
-            function saveMembers() {
-                localStorage.setItem('mealMembers', JSON.stringify(members));
-            }
+    function persistToLocalStorage() {
+        localStorage.setItem('mealManager_users', JSON.stringify(users));
+        localStorage.setItem('mealManager_expense', totalMarketExpense.toString());
+    }
 
-            function showStatus(message, type = 'success') {
-                const status = document.getElementById('statusMsg');
-                if (status) {
-                    status.textContent = message;
-                    status.classList.remove('d-none', 'alert-success', 'alert-danger');
-                    
-                    if (type === 'success') {
-                        status.classList.add('alert', 'alert-success');
-                    } else {
-                        status.classList.add('alert', 'alert-danger');
-                    }
-                    
-                    setTimeout(() => {
-                        status.classList.add('d-none');
-                    }, 3000);
-                }
-            }
+    // ---------- CORE CALCULATION LOGIC ----------
+    function getTotalMeals() {
+        return users.reduce((sum, u) => sum + (parseFloat(u.meals) || 0), 0);
+    }
 
-            function updateOutputArea() {
-                const outputDiv = document.getElementById('outputArea');
-                if (!outputDiv) return;
+    function getTotalDeposit() {
+        return users.reduce((sum, u) => sum + (parseFloat(u.deposit) || 0), 0);
+    }
 
-                const mottaka = parseFloat(document.getElementById('mottaka')?.value) || 0;
-                const motkhoroch = parseFloat(document.getElementById('motkhoroch')?.value) || 0;
-                const motmil = parseFloat(document.getElementById('motmil')?.value) || 1;
-                
-                const milret = motmil ? motkhoroch / motmil : 0;
-                const oboshisto = mottaka - motkhoroch;
+    function getCostPerMeal() {
+        const totalMeals = getTotalMeals();
+        if(totalMeals === 0 || totalMarketExpense <= 0) return 0;
+        return totalMarketExpense / totalMeals;
+    }
 
-                let totalJoma = 0, totalEx = 0;
-                let memberRows = '';
+    // NEW: Remaining balance after deducting market expense from total deposit
+    function getRemainingBalance() {
+        return getTotalDeposit() - totalMarketExpense;
+    }
 
-                members.forEach(mem => {
-                    const mil = parseFloat(mem.mil) || 0;
-                    const extra = parseFloat(mem.extra) || 0;
-                    const joma = parseFloat(mem.joma) || 0;
-                    
-                    const milKhoroch = milret * mil;
-                    const totalCost = milKhoroch + extra;
-                    const diff = joma - totalCost;
+    // compute user meal cost and balance
+    function computeUserStats(user) {
+        const meals = parseFloat(user.meals) || 0;
+        const deposit = parseFloat(user.deposit) || 0;
+        const costPerMeal = getCostPerMeal();
+        const mealCost = meals * costPerMeal;
+        const balance = deposit - mealCost;
+        return { mealCost, balance };
+    }
 
-                    totalJoma += joma;
-                    totalEx += totalCost;
+    // ---------- RENDER UI (Real-time updates) ----------
+    function renderSummary() {
+        const totalMeals = getTotalMeals();
+        const totalDeposit = getTotalDeposit();
+        const costPerMeal = getCostPerMeal();
+        const remaining = getRemainingBalance();
 
-                    let badgeClass = diff > 0 ? 'bg-success' : (diff < 0 ? 'bg-danger' : 'bg-secondary');
-                    let signText = diff > 0 ? `পাবে ${diff.toFixed(2)}` : 
-                                  (diff < 0 ? `দেবে ${Math.abs(diff).toFixed(2)}` : 'সমান');
+        // update DOM elements
+        document.getElementById('totalMealsVal').innerHTML = totalMeals.toFixed(1);
+        document.getElementById('totalDepositVal').innerHTML = totalDeposit.toFixed(2);
+        document.getElementById('totalExpenseVal').innerHTML = totalMarketExpense.toFixed(2);
+        document.getElementById('remainingBalanceVal').innerHTML = remaining.toFixed(2);
+        document.getElementById('costPerMealVal').innerHTML = costPerMeal.toFixed(2);
 
-                    memberRows += `<tr>
-                        <td class="fw-bold">${mem.name}</td>
-                        <td>${mil.toFixed(1)}</td>
-                        <td>${extra.toFixed(1)}</td>
-                        <td class="text-success fw-bold">${joma.toFixed(1)}</td>
-                        <td>${milKhoroch.toFixed(1)}</td>
-                        <td class="fw-bold">${totalCost.toFixed(1)}</td>
-                        <td><span class="badge ${badgeClass} p-2">${signText}</span></td>
-                    </tr>`;
-                });
+        // optional: color code remaining balance if positive/negative
+        const remainingElem = document.getElementById('remainingBalanceVal');
+        if(remaining >= 0) {
+            remainingElem.style.color = 'var(--positive)';
+        } else {
+            remainingElem.style.color = 'var(--negative)';
+        }
+    }
 
-                const summaryHTML = `
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>👤 নাম</th>
-                                    <th>🍚 মিল</th>
-                                    <th>💸 অতিরিক্ত</th>
-                                    <th>💰 জমা</th>
-                                    <th>🥘 মিল খরচ</th>
-                                    <th>💳 মোট খরচ</th>
-                                    <th>📊 পাবে/দেবে</th>
-                                </tr>
-                            </thead>
-                            <tbody>${memberRows || '<tr><td colspan="7" class="text-center py-5 text-muted">👥 কোনো সদস্য নেই<br><small>উপরের ফর্ম থেকে সদস্য যোগ করুন</small></td></tr>'}</tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="summary-card mt-4">
-                        <h3 class="fw-bold mb-4"><i class="fas fa-chart-pie me-2"></i>সমষ্টিগত হিসাব</h3>
-                        <div class="row g-3">
-                            <div class="col-6 col-md-4">
-                                <div class="summary-item">
-                                    <span>📈 মিল রেট</span>
-                                    <span class="text-warning fw-bold">${milret.toFixed(2)} টাকা</span>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-4">
-                                <div class="summary-item">
-                                    <span>💵 অবশিষ্ট</span>
-                                    <span class="text-success fw-bold">${oboshisto.toFixed(2)} টাকা</span>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-4">
-                                <div class="summary-item">
-                                    <span>👥 সদস্য</span>
-                                    <span class="fw-bold">${members.length} জন</span>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-4">
-                                <div class="summary-item">
-                                    <span>💰 মোট জমা</span>
-                                    <span class="text-success fw-bold">${totalJoma.toFixed(2)} টাকা</span>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-4">
-                                <div class="summary-item">
-                                    <span>💳 মোট খরচ</span>
-                                    <span class="text-danger fw-bold">${totalEx.toFixed(2)} টাকা</span>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="summary-item total">
-                                    <span class="fs-4">🏆 ম্যানেজারের ব্যালেন্স</span>
-                                    <span class="fs-3 fw-bold ${totalJoma >= totalEx ? 'text-success' : 'text-danger'}">
-                                        ${(totalJoma - totalEx).toFixed(2)} টাকা
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
+    function renderUsersTable() {
+        const tbody = document.getElementById('usersTableBody');
+        if(!tbody) return;
+        tbody.innerHTML = '';
+        const costPerMeal = getCostPerMeal();
 
-                outputDiv.innerHTML = summaryHTML;
-                updateAdminTable();
-            }
+        users.forEach((user) => {
+            const mealsVal = isNaN(parseFloat(user.meals)) ? 0 : parseFloat(user.meals);
+            const depositVal = isNaN(parseFloat(user.deposit)) ? 0 : parseFloat(user.deposit);
+            const { mealCost, balance } = computeUserStats(user);
+            const balanceFormatted = balance.toFixed(2);
+            const balanceStatus = balance >= 0 ? 'Get Money' : 'Give Money';
+            const balanceClass = balance >= 0 ? 'balance-positive' : 'balance-negative';
 
-            function updateAdminTable() {
-                const adminBody = document.getElementById('adminBody');
-                if (!adminBody) return;
+            const row = document.createElement('tr');
+            row.setAttribute('data-user-id', user.id);
 
-                let rows = '';
-                members.forEach((mem, idx) => {
-                    rows += `<tr>
-                        <td class="fw-bold">${mem.name}</td>
-                        <td>${mem.mil}</td>
-                        <td>${mem.extra}</td>
-                        <td class="text-success fw-bold">${mem.joma}</td>
-                        <td>
-                            <button class="btn btn-sm btn-info rounded-pill px-3 me-1" onclick="editMember(${idx})">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-sm btn-danger rounded-pill px-3" onclick="removeMember(${idx})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>`;
-                });
-                adminBody.innerHTML = rows || '<tr><td colspan="5" class="text-center py-4 text-muted">📝 কোনো সদস্য নেই</td></tr>';
-            }
-
-            // Global Functions
-            window.addMember = function() {
-                const name = document.getElementById('memName')?.value.trim();
-                const mil = parseFloat(document.getElementById('memMil')?.value) || 0;
-                const extra = parseFloat(document.getElementById('memExtra')?.value) || 0;
-                const joma = parseFloat(document.getElementById('memJoma')?.value) || 0;
-
-                if (!name) {
-                    showStatus('❌ নাম লিখুন!', 'danger');
-                    return;
-                }
-
-                members.push({ name, mil, extra, joma });
-                saveMembers();
-                
-                document.getElementById('memName').value = '';
-                document.getElementById('memMil').value = '';
-                document.getElementById('memExtra').value = '';
-                document.getElementById('memJoma').value = '';
-                
-                updateOutputArea();
-                showStatus(`✅ ${name} সদস্য যোগ হয়েছে!`, 'success');
-            };
-
-            window.removeMember = function(index) {
-                if (index >= 0 && index < members.length) {
-                    const name = members[index].name;
-                    members.splice(index, 1);
-                    saveMembers();
-                    updateOutputArea();
-                    showStatus(`🗑️ ${name} সদস্য মুছে ফেলা হয়েছে`, 'success');
-                }
-            };
-
-            window.clearAllMembers = function() {
-                if (members.length === 0) return;
-                if (confirm(`সমস্ত ${members.length} সদস্য মুছে ফেলবেন?\n\nএই কাজটি পুনরুদ্ধার করা যাবে না!`)) {
-                    members = [];
-                    saveMembers();
-                    updateOutputArea();
-                    showStatus('🗑️ সমস্ত সদস্য মুছে ফেলা হয়েছে', 'success');
-                }
-            };
-
-            window.editMember = function(index) {
-                const mem = members[index];
-                if (!mem) return;
-                
-                document.getElementById('memName').value = mem.name;
-                document.getElementById('memMil').value = mem.mil;
-                document.getElementById('memExtra').value = mem.extra;
-                document.getElementById('memJoma').value = mem.joma;
-                
-                if (confirm(`✏️ "${mem.name}" সম্পাদনা করতে চান?`)) {
-                    members.splice(index, 1);
-                    saveMembers();
-                    updateOutputArea();
-                }
-            };
-
-            window.downloadPNG = async function() {
-                const outputArea = document.getElementById('outputArea');
-                if (!outputArea) return;
-
-                showStatus('⏳ PNG তৈরি হচ্ছে...', 'success');
-
-                try {
-                    const canvas = await html2canvas(outputArea, {
-                        scale: 2,
-                        backgroundColor: '#ffffff',
-                        logging: false,
-                        allowTaint: true,
-                        useCORS: true
-                    });
-
-                    const link = document.createElement('a');
-                    link.download = `মিল_ক্যালকুলেটর_${new Date().toISOString().slice(0,10)}.png`;
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                    
-                    showStatus('✅ PNG সফলভাবে ডাউনলোড হয়েছে!', 'success');
-                } catch (err) {
-                    showStatus('❌ ডাউনলোড ব্যর্থ!', 'danger');
-                    console.error('PNG Error:', err);
-                }
-            };
-
-            // Event Listeners
-            ['mottaka', 'motkhoroch', 'motmil'].forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.addEventListener('input', updateOutputArea);
-                }
+            // Name cell
+            const nameCell = document.createElement('td');
+            const nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.value = user.name;
+            nameInput.className = 'user-input';
+            nameInput.addEventListener('input', (e) => {
+                user.name = e.target.value;
+                persistToLocalStorage();
+                renderUsersTable();   // re-render to keep consistency
+                renderSummary();
             });
+            nameCell.appendChild(nameInput);
+            row.appendChild(nameCell);
 
-            // Initial Render
-            updateOutputArea();
-        })();
-    </script>
+            // Deposit cell
+            const depositCell = document.createElement('td');
+            const depositInput = document.createElement('input');
+            depositInput.type = 'number';
+            depositInput.step = 'any';
+            depositInput.value = depositVal;
+            depositInput.className = 'user-input';
+            depositInput.addEventListener('input', (e) => {
+                let val = parseFloat(e.target.value);
+                if(isNaN(val)) val = 0;
+                if(val < 0) val = 0;  // non-negative validation
+                user.deposit = val;
+                persistToLocalStorage();
+                renderUsersTable();
+                renderSummary();
+            });
+            depositCell.appendChild(depositInput);
+            row.appendChild(depositCell);
 
-    <!-- Bootstrap JS (optional, for better mobile interaction) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            // Meals cell
+            const mealsCell = document.createElement('td');
+            const mealsInput = document.createElement('input');
+            mealsInput.type = 'number';
+            mealsInput.step = 'any';
+            mealsInput.value = mealsVal;
+            mealsInput.className = 'user-input';
+            mealsInput.addEventListener('input', (e) => {
+                let val = parseFloat(e.target.value);
+                if(isNaN(val)) val = 0;
+                if(val < 0) val = 0;
+                user.meals = val;
+                persistToLocalStorage();
+                renderUsersTable();
+                renderSummary();
+            });
+            mealsCell.appendChild(mealsInput);
+            row.appendChild(mealsCell);
+
+            // Meal Cost display
+            const mealCostCell = document.createElement('td');
+            mealCostCell.innerText = mealCost.toFixed(2);
+            mealCostCell.style.fontWeight = '500';
+            row.appendChild(mealCostCell);
+
+            // Balance display
+            const balanceCell = document.createElement('td');
+            const balanceSpan = document.createElement('span');
+            balanceSpan.className = balanceClass;
+            balanceSpan.innerText = `${balanceFormatted} (${balanceStatus})`;
+            balanceCell.appendChild(balanceSpan);
+            row.appendChild(balanceCell);
+
+            // Remove button
+            const actionCell = document.createElement('td');
+            const removeBtn = document.createElement('button');
+            removeBtn.innerHTML = '✖';
+            removeBtn.className = 'remove-user';
+            removeBtn.title = 'Remove user';
+            removeBtn.addEventListener('click', () => {
+                users = users.filter(u => u.id !== user.id);
+                persistToLocalStorage();
+                renderUsersTable();
+                renderSummary();
+            });
+            actionCell.appendChild(removeBtn);
+            row.appendChild(actionCell);
+            tbody.appendChild(row);
+        });
+    }
+
+    // Full UI refresh
+    function refreshAllUI() {
+        renderSummary();
+        renderUsersTable();
+        const expenseInput = document.getElementById('marketExpenseInput');
+        if(expenseInput) expenseInput.value = totalMarketExpense;
+    }
+
+    // Add new user
+    function addNewUser() {
+        const newUser = {
+            id: generateId(),
+            name: `Member ${users.length + 1}`,
+            deposit: 0,
+            meals: 0
+        };
+        users.push(newUser);
+        persistToLocalStorage();
+        refreshAllUI();
+    }
+
+    // Reset all data (with fresh demo users)
+    function resetAllData() {
+        users = [
+            { id: generateId(), name: "Rafiq", deposit: 2500, meals: 12 },
+            { id: generateId(), name: "Shabana", deposit: 1800, meals: 8 },
+            { id: generateId(), name: "Jabbar", deposit: 3200, meals: 15 }
+        ];
+        totalMarketExpense = 0;
+        persistToLocalStorage();
+        const expenseInput = document.getElementById('marketExpenseInput');
+        if(expenseInput) expenseInput.value = 0;
+        refreshAllUI();
+    }
+
+    // Dark mode initialization
+    function initDarkMode() {
+        const isDark = localStorage.getItem('darkMode') === 'true';
+        if(isDark) document.body.classList.add('dark');
+        const toggleBtn = document.getElementById('darkModeToggleBtn');
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const darkEnabled = document.body.classList.contains('dark');
+            localStorage.setItem('darkMode', darkEnabled);
+        });
+    }
+
+    // Export to PDF using browser print with enhanced styles
+    function exportToPDF() {
+        const originalTitle = document.title;
+        document.title = "Meal_Management_Report";
+        window.print();
+        document.title = originalTitle;
+    }
+
+    // Global event listeners
+    function bindGlobalEvents() {
+        const expenseInput = document.getElementById('marketExpenseInput');
+        expenseInput.addEventListener('input', (e) => {
+            let val = parseFloat(e.target.value);
+            if(isNaN(val)) val = 0;
+            if(val < 0) val = 0;
+            totalMarketExpense = val;
+            persistToLocalStorage();
+            refreshAllUI();
+        });
+
+        document.getElementById('addUserBtn').addEventListener('click', addNewUser);
+        document.getElementById('resetAllBtn').addEventListener('click', resetAllData);
+        document.getElementById('exportPDFBtn').addEventListener('click', exportToPDF);
+    }
+
+    // Additional validation to prevent negative values on number inputs via delegation
+    function enforceNonNegativeNumbers() {
+        document.getElementById('usersTableBody')?.addEventListener('input', (e) => {
+            if(e.target.type === 'number' && e.target.step !== undefined) {
+                let val = parseFloat(e.target.value);
+                if(val < 0) {
+                    e.target.value = 0;
+                    // trigger input event manually? but our listeners will handle it after value changes.
+                    const event = new Event('input', { bubbles: true });
+                    e.target.dispatchEvent(event);
+                }
+            }
+        });
+    }
+
+    // initialize app
+    function init() {
+        loadFromLocalStorage();
+        bindGlobalEvents();
+        initDarkMode();
+        refreshAllUI();
+        enforceNonNegativeNumbers();
+        // extra: update remaining balance color initially
+        renderSummary();
+    }
+
+    // Start
+    init();
+</script>
 </body>
 </html>
