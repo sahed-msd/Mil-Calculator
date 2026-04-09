@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Meal Manager Pro | Real-time Meal Cost Calculator</title>
+    <title>Meal Manager | Real-time Meal Cost Calculator</title>
     <style>
         * {
             margin: 0;
@@ -114,7 +114,7 @@
         .btn-secondary { background: var(--card-bg); }
         .btn-secondary:hover { background: var(--border-light); transform: translateY(-1px); }
 
-        /* summary cards grid - now 5 cards */
+        /* summary cards grid */
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -172,7 +172,7 @@
             padding: 0.6rem 1rem;
             border-radius: 2rem;
             font-size: 1rem;
-            width: 180px;
+            width: 220px;
             color: var(--text-primary);
         }
 
@@ -272,6 +272,12 @@
             padding: 0.6rem 1.5rem;
             border-radius: 2rem;
             font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .btn-add-user:hover {
+            transform: scale(1.02);
+            background: var(--accent-hover);
         }
 
         /* responsive */
@@ -286,11 +292,6 @@
             font-size: 0.75rem;
             color: var(--text-secondary);
         }
-        .dark-toggle {
-            background: var(--card-bg);
-            border-radius: 2rem;
-            padding: 0.4rem 1rem;
-        }
         @media print {
             body { background: white; color: black; }
             .toolbar button, .add-user-row, .remove-user, #addUserBtn, .btn-add-user, .action-buttons, .expense-panel input, .user-input { background: white !important; color: black !important; border: 1px solid #ccc; }
@@ -298,7 +299,7 @@
             .balance-negative { background: #fee2e2; color: #991b1b; }
             .users-table { border-collapse: collapse; width: 100%; }
             .users-table th, .users-table td { border: 1px solid #ccc; }
-            .dark-toggle, #exportPDFBtn, #resetAllBtn, #darkModeToggleBtn { display: none; }
+            #exportPDFBtn, #resetAllBtn, #darkModeToggleBtn { display: none; }
             .btn-add-user { display: none; }
             .summary-card { box-shadow: none; border: 1px solid #aaa; }
         }
@@ -307,7 +308,7 @@
 <body>
 <div class="dashboard-container">
     <div class="toolbar">
-        <h1>🍽️ Meal Manager Pro</h1>
+        <h1>🍽️ Meal Manager</h1>
         <div class="action-buttons">
             <button id="darkModeToggleBtn" class="btn-secondary">🌓 Dark Mode</button>
             <button id="resetAllBtn" class="btn-danger">⟳ Reset All Data</button>
@@ -315,7 +316,7 @@
         </div>
     </div>
 
-    <!-- Summary Cards: Added "Remaining Balance (Deposit - Expense)" -->
+    <!-- Summary Cards: Total Meals, Deposit, Expense, Remaining, Cost per meal -->
     <div class="summary-grid" id="summaryGrid">
         <div class="summary-card"><h3>🍴 Total Meals</h3><div class="summary-value" id="totalMealsVal">0</div></div>
         <div class="summary-card"><h3>💰 Total Deposit</h3><div class="summary-value" id="totalDepositVal">0</div></div>
@@ -338,20 +339,21 @@
                 <tr><th>User Name</th><th>Deposit (BDT)</th><th>Meals Count</th><th>Meal Cost</th><th>Balance</th><th style="width: 50px"></th></tr>
             </thead>
             <tbody id="usersTableBody">
-                <!-- dynamic rows injected -->
+                <!-- dynamic rows will be rendered here -->
             </tbody>
             <tfoot class="add-user-row">
                 <tr><td colspan="6"><button id="addUserBtn" class="btn-add-user">+ Add New User</button></td></tr>
             </tfoot>
         </table>
     </div>
-    <footer>✔ Real-time | Positive Balance = Get Money | Negative = Give Money | Remaining = Total Deposit - Total Expense</footer>
+    <footer>✔ Real-time updates | Positive Balance = Get Money (Green) | Negative = Give Money (Red) | Remaining = Total Deposit - Total Expense</footer>
 </div>
 
 <script>
     // ---------- DATA MODEL ----------
     let users = [];         // each user: { id, name, deposit, meals }
     let totalMarketExpense = 0;
+    let updateTimer = null;  // not needed for focus fix, but we use smart partial updates
 
     // Helper: unique id
     function generateId() {
@@ -374,9 +376,7 @@
         // default demo users if empty
         if(users.length === 0) {
             users = [
-                { id: generateId(), name: "Rafiq", deposit: 2500, meals: 12 },
-                { id: generateId(), name: "Shabana", deposit: 1800, meals: 8 },
-                { id: generateId(), name: "Jabbar", deposit: 3200, meals: 15 }
+                { id: generateId(), name: "SHAHED", deposit: 2500, meals: 60 },
             ];
         }
     }
@@ -401,12 +401,10 @@
         return totalMarketExpense / totalMeals;
     }
 
-    // NEW: Remaining balance after deducting market expense from total deposit
     function getRemainingBalance() {
         return getTotalDeposit() - totalMarketExpense;
     }
 
-    // compute user meal cost and balance
     function computeUserStats(user) {
         const meals = parseFloat(user.meals) || 0;
         const deposit = parseFloat(user.deposit) || 0;
@@ -416,47 +414,82 @@
         return { mealCost, balance };
     }
 
-    // ---------- RENDER UI (Real-time updates) ----------
-    function renderSummary() {
+    // ----- FOCUS-FRIENDLY RENDER: update only text contents and classes without regenerating inputs -----
+    // To prevent losing focus, we avoid re-creating the whole table on every keystroke.
+    // Instead we update the non-input cells (meal cost, balance, summary) and keep input elements intact.
+    // This solves the "cursor jumps / refocus" problem.
+    
+    let isRendering = false;
+    
+    function updateSummaryOnly() {
         const totalMeals = getTotalMeals();
         const totalDeposit = getTotalDeposit();
         const costPerMeal = getCostPerMeal();
         const remaining = getRemainingBalance();
-
-        // update DOM elements
+        
         document.getElementById('totalMealsVal').innerHTML = totalMeals.toFixed(1);
         document.getElementById('totalDepositVal').innerHTML = totalDeposit.toFixed(2);
         document.getElementById('totalExpenseVal').innerHTML = totalMarketExpense.toFixed(2);
         document.getElementById('remainingBalanceVal').innerHTML = remaining.toFixed(2);
         document.getElementById('costPerMealVal').innerHTML = costPerMeal.toFixed(2);
-
-        // optional: color code remaining balance if positive/negative
+        
         const remainingElem = document.getElementById('remainingBalanceVal');
-        if(remaining >= 0) {
-            remainingElem.style.color = 'var(--positive)';
-        } else {
-            remainingElem.style.color = 'var(--negative)';
-        }
+        if(remaining >= 0) remainingElem.style.color = 'var(--positive)';
+        else remainingElem.style.color = 'var(--negative)';
     }
-
-    function renderUsersTable() {
-        const tbody = document.getElementById('usersTableBody');
-        if(!tbody) return;
-        tbody.innerHTML = '';
+    
+    // Update meal cost and balance cells for each user row without recreating inputs
+    function updateDynamicCells() {
+        const rows = document.querySelectorAll('#usersTableBody tr');
+        if(rows.length !== users.length) {
+            // if length mismatch, full refresh is safer
+            fullRenderTable();
+            return;
+        }
+        
         const costPerMeal = getCostPerMeal();
-
-        users.forEach((user) => {
-            const mealsVal = isNaN(parseFloat(user.meals)) ? 0 : parseFloat(user.meals);
-            const depositVal = isNaN(parseFloat(user.deposit)) ? 0 : parseFloat(user.deposit);
-            const { mealCost, balance } = computeUserStats(user);
+        users.forEach((user, idx) => {
+            const row = rows[idx];
+            if(!row) return;
+            const mealsVal = parseFloat(user.meals) || 0;
+            const depositVal = parseFloat(user.deposit) || 0;
+            const mealCost = mealsVal * costPerMeal;
+            const balance = depositVal - mealCost;
             const balanceFormatted = balance.toFixed(2);
             const balanceStatus = balance >= 0 ? 'Get Money' : 'Give Money';
             const balanceClass = balance >= 0 ? 'balance-positive' : 'balance-negative';
-
+            
+            // update meal cost cell (4th column index 3)
+            const mealCostCell = row.cells[3];
+            if(mealCostCell) mealCostCell.innerText = mealCost.toFixed(2);
+            
+            // update balance cell (5th column index 4)
+            const balanceCell = row.cells[4];
+            if(balanceCell) {
+                balanceCell.innerHTML = ''; // clear
+                const span = document.createElement('span');
+                span.className = balanceClass;
+                span.innerText = `${balanceFormatted} (${balanceStatus})`;
+                balanceCell.appendChild(span);
+            }
+        });
+        updateSummaryOnly();
+    }
+    
+    // This is used only when adding/removing users or reset. It preserves inputs but rebuilds structure.
+    // However, we need to attach event listeners properly to new inputs without causing focus loss on existing ones.
+    // For smooth editing: we'll rebuild only when necessary (add/remove/reset), and for individual updates we use updateDynamicCells.
+    function fullRenderTable() {
+        const tbody = document.getElementById('usersTableBody');
+        if(!tbody) return;
+        // Store current active element to try to restore focus? Not needed, full rebuild will cause focus loss but only on structural changes.
+        tbody.innerHTML = '';
+        
+        users.forEach((user) => {
             const row = document.createElement('tr');
             row.setAttribute('data-user-id', user.id);
-
-            // Name cell
+            
+            // Name cell with input
             const nameCell = document.createElement('td');
             const nameInput = document.createElement('input');
             nameInput.type = 'text';
@@ -465,37 +498,35 @@
             nameInput.addEventListener('input', (e) => {
                 user.name = e.target.value;
                 persistToLocalStorage();
-                renderUsersTable();   // re-render to keep consistency
-                renderSummary();
+                // only update if needed but no re-render needed for name changes
             });
             nameCell.appendChild(nameInput);
             row.appendChild(nameCell);
-
+            
             // Deposit cell
             const depositCell = document.createElement('td');
             const depositInput = document.createElement('input');
             depositInput.type = 'number';
             depositInput.step = 'any';
-            depositInput.value = depositVal;
+            depositInput.value = user.deposit;
             depositInput.className = 'user-input';
             depositInput.addEventListener('input', (e) => {
                 let val = parseFloat(e.target.value);
                 if(isNaN(val)) val = 0;
-                if(val < 0) val = 0;  // non-negative validation
+                if(val < 0) val = 0;
                 user.deposit = val;
                 persistToLocalStorage();
-                renderUsersTable();
-                renderSummary();
+                updateDynamicCells();   // no full rebuild, just update derived fields
             });
             depositCell.appendChild(depositInput);
             row.appendChild(depositCell);
-
+            
             // Meals cell
             const mealsCell = document.createElement('td');
             const mealsInput = document.createElement('input');
             mealsInput.type = 'number';
             mealsInput.step = 'any';
-            mealsInput.value = mealsVal;
+            mealsInput.value = user.meals;
             mealsInput.className = 'user-input';
             mealsInput.addEventListener('input', (e) => {
                 let val = parseFloat(e.target.value);
@@ -503,26 +534,20 @@
                 if(val < 0) val = 0;
                 user.meals = val;
                 persistToLocalStorage();
-                renderUsersTable();
-                renderSummary();
+                updateDynamicCells();
             });
             mealsCell.appendChild(mealsInput);
             row.appendChild(mealsCell);
-
-            // Meal Cost display
+            
+            // Meal Cost display (will be filled later)
             const mealCostCell = document.createElement('td');
-            mealCostCell.innerText = mealCost.toFixed(2);
             mealCostCell.style.fontWeight = '500';
             row.appendChild(mealCostCell);
-
+            
             // Balance display
             const balanceCell = document.createElement('td');
-            const balanceSpan = document.createElement('span');
-            balanceSpan.className = balanceClass;
-            balanceSpan.innerText = `${balanceFormatted} (${balanceStatus})`;
-            balanceCell.appendChild(balanceSpan);
             row.appendChild(balanceCell);
-
+            
             // Remove button
             const actionCell = document.createElement('td');
             const removeBtn = document.createElement('button');
@@ -532,23 +557,30 @@
             removeBtn.addEventListener('click', () => {
                 users = users.filter(u => u.id !== user.id);
                 persistToLocalStorage();
-                renderUsersTable();
-                renderSummary();
+                fullRenderTable();   // rebuild because rows changed
+                updateSummaryOnly();
             });
             actionCell.appendChild(removeBtn);
             row.appendChild(actionCell);
+            
             tbody.appendChild(row);
         });
+        
+        // Now fill computed values
+        updateDynamicCells();
     }
-
-    // Full UI refresh
-    function refreshAllUI() {
-        renderSummary();
-        renderUsersTable();
-        const expenseInput = document.getElementById('marketExpenseInput');
-        if(expenseInput) expenseInput.value = totalMarketExpense;
+    
+    // Market expense listener update
+    function updateMarketExpense(value) {
+        let val = parseFloat(value);
+        if(isNaN(val)) val = 0;
+        if(val < 0) val = 0;
+        totalMarketExpense = val;
+        persistToLocalStorage();
+        updateDynamicCells();   // cost per meal changes, update all meal costs & balances
+        updateSummaryOnly();
     }
-
+    
     // Add new user
     function addNewUser() {
         const newUser = {
@@ -559,87 +591,81 @@
         };
         users.push(newUser);
         persistToLocalStorage();
-        refreshAllUI();
+        fullRenderTable();    // rebuild with new row
     }
-
-    // Reset all data (with fresh demo users)
+    
+    // Reset all data (keep demo users but fresh)
     function resetAllData() {
         users = [
-            { id: generateId(), name: "Rafiq", deposit: 2500, meals: 12 },
-            { id: generateId(), name: "Shabana", deposit: 1800, meals: 8 },
-            { id: generateId(), name: "Jabbar", deposit: 3200, meals: 15 }
+            { id: generateId(), name: "SHAHED", deposit: 2500, meals: 60 },
         ];
         totalMarketExpense = 0;
         persistToLocalStorage();
         const expenseInput = document.getElementById('marketExpenseInput');
         if(expenseInput) expenseInput.value = 0;
-        refreshAllUI();
+        fullRenderTable();
+        updateSummaryOnly();
     }
-
-    // Dark mode initialization
+    
+    // Dark mode
     function initDarkMode() {
         const isDark = localStorage.getItem('darkMode') === 'true';
         if(isDark) document.body.classList.add('dark');
         const toggleBtn = document.getElementById('darkModeToggleBtn');
         toggleBtn.addEventListener('click', () => {
             document.body.classList.toggle('dark');
-            const darkEnabled = document.body.classList.contains('dark');
-            localStorage.setItem('darkMode', darkEnabled);
+            localStorage.setItem('darkMode', document.body.classList.contains('dark'));
         });
     }
-
-    // Export to PDF using browser print with enhanced styles
+    
+    // Export PDF using browser print
     function exportToPDF() {
         const originalTitle = document.title;
         document.title = "Meal_Management_Report";
         window.print();
         document.title = originalTitle;
     }
-
-    // Global event listeners
+    
+    // Bind events
     function bindGlobalEvents() {
         const expenseInput = document.getElementById('marketExpenseInput');
         expenseInput.addEventListener('input', (e) => {
-            let val = parseFloat(e.target.value);
-            if(isNaN(val)) val = 0;
-            if(val < 0) val = 0;
-            totalMarketExpense = val;
-            persistToLocalStorage();
-            refreshAllUI();
+            updateMarketExpense(e.target.value);
         });
-
+        
         document.getElementById('addUserBtn').addEventListener('click', addNewUser);
         document.getElementById('resetAllBtn').addEventListener('click', resetAllData);
         document.getElementById('exportPDFBtn').addEventListener('click', exportToPDF);
     }
-
-    // Additional validation to prevent negative values on number inputs via delegation
-    function enforceNonNegativeNumbers() {
-        document.getElementById('usersTableBody')?.addEventListener('input', (e) => {
-            if(e.target.type === 'number' && e.target.step !== undefined) {
+    
+    // Additional validation to ensure no negative numbers (blur event to fix any negative)
+    function attachGlobalValidation() {
+        document.addEventListener('input', (e) => {
+            if(e.target && e.target.type === 'number' && e.target.step !== undefined && e.target.classList.contains('user-input')) {
                 let val = parseFloat(e.target.value);
                 if(val < 0) {
                     e.target.value = 0;
-                    // trigger input event manually? but our listeners will handle it after value changes.
-                    const event = new Event('input', { bubbles: true });
-                    e.target.dispatchEvent(event);
+                    // trigger input event to sync model
+                    const inputEv = new Event('input', { bubbles: true });
+                    e.target.dispatchEvent(inputEv);
                 }
             }
         });
     }
-
-    // initialize app
+    
+    // Initialize app
     function init() {
         loadFromLocalStorage();
         bindGlobalEvents();
         initDarkMode();
-        refreshAllUI();
-        enforceNonNegativeNumbers();
-        // extra: update remaining balance color initially
-        renderSummary();
+        fullRenderTable();    // initial render
+        attachGlobalValidation();
+        // sync expense field
+        document.getElementById('marketExpenseInput').value = totalMarketExpense;
+        updateSummaryOnly();
     }
-
-    // Start
+    
+    // start
     init();
 </script>
 </body>
